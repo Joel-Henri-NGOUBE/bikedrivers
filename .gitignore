@@ -9,6 +9,8 @@
 /vendor/
 /fixtures
 /migrations/*.php
+/zbackup
+index.html
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
