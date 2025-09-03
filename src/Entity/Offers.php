@@ -173,18 +173,18 @@ class Offers
     // #[Groups(['read', 'write'])]
     // private Collection $applications;
 
-    // /**
-    //  * @var Collection<int, Messages>
-    // */
-    // #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'offer')]
-    // #[Groups(['read', 'write'])]
-    // private Collection $messages;
+    /**
+     * @var Collection<int, Messages>
+    */
+    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'offer')]
+    #[Groups(['read', 'write'])]
+    private Collection $messages;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         // $this->applications = new ArrayCollection();
-        // $this->messages = new ArrayCollection();
+        $this->messages = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
@@ -374,34 +374,34 @@ class Offers
     //     return $this;
     // }
 
-    // /**
-    //  * @return Collection<int, Messages>
-    //  */
-    // public function getMessages(): Collection
-    // {
-    //     return $this->messages;
-    // }
+    /**
+     * @return Collection<int, Messages>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
 
-    // public function addMessage(Messages $message): static
-    // {
-    //     if (!$this->messages->contains($message)) {
-    //         $this->messages->add($message);
-    //         $message->setOffer($this);
-    //     }
+    public function addMessage(Messages $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setOffer($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function removeMessage(Messages $message): static
-    // {
-    //     if ($this->messages->removeElement($message)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($message->getOffer() === $this) {
-    //             $message->setOffer(null);
-    //         }
-    //     }
+    public function removeMessage(Messages $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getOffer() === $this) {
+                $message->setOffer(null);
+            }
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
     
 }
