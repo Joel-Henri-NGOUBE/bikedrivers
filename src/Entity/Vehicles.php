@@ -113,12 +113,12 @@ class Vehicles
     #[Groups(['read', 'write'])]
     private Collection $offers;
 
-    // /**
-    //  * @var Collection<int, Pictures>
-    //  */
-    // #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'vehicle')]
-    // #[Groups(['read', 'write'])]
-    // private Collection $pictures;
+    /**
+     * @var Collection<int, Pictures>
+     */
+    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'vehicle')]
+    #[Groups(['read', 'write'])]
+    private Collection $pictures;
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]
     #[ORM\JoinColumn(nullable: false)]
@@ -227,35 +227,35 @@ class Vehicles
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Pictures>
-    //  */
-    // public function getPictures(): Collection
-    // {
-    //     return $this->pictures;
-    // }
+    /**
+     * @return Collection<int, Pictures>
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
 
-    // public function addPicture(Pictures $picture): static
-    // {
-    //     if (!$this->pictures->contains($picture)) {
-    //         $this->pictures->add($picture);
-    //         $picture->setVehicle($this);
-    //     }
+    public function addPicture(Pictures $picture): static
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures->add($picture);
+            $picture->setVehicle($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function removePicture(Pictures $picture): static
-    // {
-    //     if ($this->pictures->removeElement($picture)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($picture->getVehicle() === $this) {
-    //             $picture->setVehicle(null);
-    //         }
-    //     }
+    public function removePicture(Pictures $picture): static
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getVehicle() === $this) {
+                $picture->setVehicle(null);
+            }
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getUser(): ?User
     {

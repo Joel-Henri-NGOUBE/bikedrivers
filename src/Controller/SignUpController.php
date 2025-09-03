@@ -49,21 +49,4 @@ class SignUpController extends AbstractController
         ->setStatusCode(200);
     }
 
-    #[Route('filetesting', name: 'filetesting', methods: ['POST'])]
-    public function test(Request $request, EntityManagerInterface $em, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse{
-        // dd([
-        //     "return" => "return"
-        // ]);
-        // dd($request);
-        // return $this->json([
-        //     "return" => "return"
-        // ]);
-        // $file = new UploadedFile($request->files->all());
-        $files = $request->files;
-        // var_dump(array_keys($request->files->all()));
-        return $this->json(['name' => $_FILES,
-            'response' => 'The response']);
-        // return $this->json(['name' => $request->files[0]['tmp_name']]);
-    }
-
 }
