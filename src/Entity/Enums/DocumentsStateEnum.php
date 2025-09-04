@@ -10,5 +10,5 @@ enum State: string
 {
     case Valid = 'VALID';
     case  Invalid = 'INVALID';
-    case Evaluating = "EVALUATING";
+    case Unevaluated = "UNEVALUATED";
 }

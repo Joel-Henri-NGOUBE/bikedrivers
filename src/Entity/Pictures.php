@@ -25,7 +25,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     //     'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle')
     // ],
     operations: [new Post()],
-    security: "is_granted('PUBLIC_ACCESS')",
     controller: PicturesController::class
 )]
 

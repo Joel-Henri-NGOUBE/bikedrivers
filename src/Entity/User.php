@@ -102,6 +102,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['read', 'write'])]
     private Collection $vehicles;
 
+    /**
+     * @var Collection<int, Documents>
+     */
+    #[ORM\OneToMany(targetEntity: Documents::class, mappedBy: 'user')]
+    private Collection $documents;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -112,7 +118,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         // $this->yes = new ArrayCollection();
-        $this->offers = new ArrayCollection();
+        // $this->offers = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -388,6 +395,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($vehicle->getUser() === $this) {
                 $vehicle->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Documents>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Documents $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Documents $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getUser() === $this) {
+                $document->setUser(null);
             }
         }
 
