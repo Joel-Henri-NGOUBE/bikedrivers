@@ -178,7 +178,7 @@ class Vehicles
         return $this->addedAt;
     }
 
-    public function setAddedAt(\DateTimeImmutable $addedAt): static
+    public function setAddedAt(): static
     {
         $this->addedAt = new \DateTimeImmutable();
 

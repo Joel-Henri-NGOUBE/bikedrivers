@@ -180,6 +180,12 @@ class Offers
     #[Groups(['read', 'write'])]
     private Collection $messages;
 
+    /**
+     * @var Collection<int, RequiredDocuments>
+     */
+    #[ORM\OneToMany(targetEntity: RequiredDocuments::class, mappedBy: 'offer')]
+    private Collection $requiredDocuments;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -187,6 +193,7 @@ class Offers
         $this->messages = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->requiredDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -398,6 +405,36 @@ class Offers
             // set the owning side to null (unless already changed)
             if ($message->getOffer() === $this) {
                 $message->setOffer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RequiredDocuments>
+     */
+    public function getRequiredDocuments(): Collection
+    {
+        return $this->requiredDocuments;
+    }
+
+    public function addRequiredDocument(RequiredDocuments $requiredDocument): static
+    {
+        if (!$this->requiredDocuments->contains($requiredDocument)) {
+            $this->requiredDocuments->add($requiredDocument);
+            $requiredDocument->setOffer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequiredDocument(RequiredDocuments $requiredDocument): static
+    {
+        if ($this->requiredDocuments->removeElement($requiredDocument)) {
+            // set the owning side to null (unless already changed)
+            if ($requiredDocument->getOffer() === $this) {
+                $requiredDocument->setOffer(null);
             }
         }
 
