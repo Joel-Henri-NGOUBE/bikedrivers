@@ -21,7 +21,7 @@ final class PatchDocumentController extends AbstractController
         $document = $documentsRepository->findOneById($document_id);
 
         $document->setState(associateState($payload['state']));
-        $document->setAddedAt();
+        $document->setUpdatedAt();
         $em->persist($document);
         $em->flush();
 

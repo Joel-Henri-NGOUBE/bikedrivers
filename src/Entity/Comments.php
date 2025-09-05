@@ -85,7 +85,7 @@ class Comments
     #[Groups(['read', 'write'])]
     private ?string $content = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $createdAt = null;
 

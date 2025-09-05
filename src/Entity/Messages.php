@@ -21,7 +21,6 @@ use App\Controller\Messages as MessagesControllers;
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/sender/{sender_id}/recipient/{recipient_id}/messages',
     operations: [new Post()],
-    // security: "is_granted('PUBLIC_ACCESS')",
     controller: MessagesControllers\PostMessagesController::class
 )]
 
@@ -97,10 +96,10 @@ class Messages
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
     private ?string $content = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'messagesSent')]

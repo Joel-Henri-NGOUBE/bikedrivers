@@ -10,7 +10,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\ApiProperty;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`users`')]
@@ -32,10 +31,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['read', 'write'])]
-    // #[ApiProperty(identifier: true)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $mail = null;
 
@@ -49,23 +47,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read'])]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $firstname = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $lastname = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -75,13 +73,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'RgetUserRecipient')]
     #[Groups(['read', 'write'])]
     private Collection $comments;
-
-    // /**
-    //  * @var Collection<int, Applications>
-    //  */
-    // #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'user_candidate')]
-    // #[Groups(['read', 'write'])]
-    // private Collection $applications;
 
     /**
      * @var Collection<int, Messages>
@@ -113,14 +104,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        // $this->applications = new ArrayCollection();
         $this->messagesSent = new ArrayCollection();
         $this->messagesReceived = new ArrayCollection();
         $this->vehicles = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
-        // $this->yes = new ArrayCollection();
-        // $this->offers = new ArrayCollection();
         $this->documents = new ArrayCollection();
     }
 
@@ -282,36 +270,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    // /**
-    //  * @return Collection<int, Applications>
-    //  */
-    // public function getApplications(): Collection
-    // {
-    //     return $this->applications;
-    // }
-
-    // public function addApplication(Applications $application): static
-    // {
-    //     if (!$this->applications->contains($application)) {
-    //         $this->applications->add($application);
-    //         $application->setUserCandidate($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeApplication(Applications $application): static
-    // {
-    //     if ($this->applications->removeElement($application)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($application->getUserCandidate() === $this) {
-    //             $application->setUserCandidate(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
 
     /**
      * @return Collection<int, Messages>

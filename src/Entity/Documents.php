@@ -91,14 +91,14 @@ class Documents
     #[ORM\Column(type: Types::TEXT)]
     private ?string $path = null;
 
-    #[ORM\Column(enumType: Enums\State::class)]
+    #[ORM\Column(enumType: Enums\State::class, options: ["default" => State::Unevaluated])]
     private ?State $state = null;
 
     #[Vich\UploadableField(mapping: 'documents', fileNameProperty: 'path')]
     private ?File $documentFile = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $AddedAt = null;
+    #[ORM\Column(nullable: false)]
+    private ?\DateTimeImmutable $addedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'documents')]
     #[ORM\JoinColumn(nullable: false)]
@@ -116,16 +116,14 @@ class Documents
     #[ORM\ManyToMany(targetEntity: RequiredDocuments::class, inversedBy: 'documents')]
     private Collection $requiredDocuments;
 
-    // #[ORM\ManyToOne(inversedBy: 'document')]
-    // #[ORM\JoinColumn(nullable: false)]
-    // private ?Applications $applications = null;
+    #[ORM\Column(nullable: false)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
-        $this->AddedAt = new \DateTimeImmutable();
+        $this->addedAt = new \DateTimeImmutable();
         $this->applications = new ArrayCollection();
         $this->requiredDocuments = new ArrayCollection();
-        $this->appli = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,8 +165,7 @@ class Documents
         $this->documentFile = $file;
 
         if($file){
-            // Changer pour mettre updatedAt
-            $this->AddedAt = new \DateTimeImmutable();
+            $this->setUpdatedAt();
         }
 
         return $this;
@@ -176,27 +173,15 @@ class Documents
 
     public function getAddedAt(): ?\DateTimeImmutable
     {
-        return $this->AddedAt;
+        return $this->addedAt;
     }
 
     public function setAddedAt(): static
     {
-        $this->AddedAt = new \DateTimeImmutable();
+        $this->addedAt = new \DateTimeImmutable();
 
         return $this;
     }
-
-    // public function getApplications(): ?Applications
-    // {
-    //     return $this->applications;
-    // }
-
-    // public function setApplications(?Applications $applications): static
-    // {
-    //     $this->applications = $applications;
-
-    //     return $this;
-    // }
 
     public function getUser(): ?User
     {
@@ -257,6 +242,18 @@ class Documents
     public function removeRequiredDocument(RequiredDocuments $requiredDocument): static
     {
         $this->requiredDocuments->removeElement($requiredDocument);
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): static
+    {
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }

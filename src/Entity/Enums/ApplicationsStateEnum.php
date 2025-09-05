@@ -3,7 +3,7 @@
 namespace App\Entity\Enums;
 
 /**
- * Defines the Enum class State that will be used to type the State field of Documents Entity
+ * Defines the Enum class ApplicationState that will be used to type the State field of Applications Entity
  */
 
 enum ApplicationState: string

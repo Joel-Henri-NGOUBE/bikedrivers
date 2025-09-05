@@ -18,7 +18,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\OffersController;
 use App\Controller\GetAnOfferController;
 use App\Entity\Enums\Status;
-use ApiPlatform\Metadata\ApiProperty;
 
 #[ORM\Entity(repositoryClass: OffersRepository::class)]
 // Defines the route that adds an operation
@@ -115,22 +114,17 @@ class Offers
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['read', 'write'])]
-    // #[ApiProperty(identifier: true)]
-    // #[ApiProperty(identifier: true)]
     private ?int $id = null;
     
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     #[Groups(['read', 'write'])]
     private ?string $id_taker = null;
-
-    // #[ORM\Column(length: 255)]
-    // private ?string $title = null;
     
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $description = null;
     
-    #[ORM\Column(enumType: Status::class)]
+    #[ORM\Column(enumType: Status::class, nullable: false, options: ["default" => Status::Available])]
     #[Groups(['read', 'write'])]
     private ?Status $status = null;
     
@@ -138,11 +132,11 @@ class Offers
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $boughtAt = null;
     
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $createdAt = null;
     
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $updatedAt = null;
     
@@ -166,12 +160,12 @@ class Offers
     #[Groups(['read', 'write'])]
     private Collection $comments;
 
-    // /**
-    //  * @var Collection<int, Applications>
-    // */
-    // #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'offer')]
-    // #[Groups(['read', 'write'])]
-    // private Collection $applications;
+    /**
+     * @var Collection<int, Applications>
+    */
+    #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'offer')]
+    #[Groups(['read', 'write'])]
+    private Collection $applications;
 
     /**
      * @var Collection<int, Messages>
@@ -189,7 +183,7 @@ class Offers
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        // $this->applications = new ArrayCollection();
+        $this->applications = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
@@ -212,18 +206,6 @@ class Offers
 
         return $this;
     }
-
-    // public function getTitle(): ?string
-    // {
-    //     return $this->title;
-    // }
-
-    // public function setTitle(string $title): static
-    // {
-    //     $this->title = $title;
-
-    //     return $this;
-    // }
 
     public function getDescription(): ?string
     {
@@ -351,35 +333,35 @@ class Offers
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Applications>
-    //  */
-    // public function getApplications(): Collection
-    // {
-    //     return $this->applications;
-    // }
+    /**
+     * @return Collection<int, Applications>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
 
-    // public function addApplication(Applications $application): static
-    // {
-    //     if (!$this->applications->contains($application)) {
-    //         $this->applications->add($application);
-    //         $application->setOffer($this);
-    //     }
+    public function addApplication(Applications $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setOffer($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function removeApplication(Applications $application): static
-    // {
-    //     if ($this->applications->removeElement($application)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($application->getOffer() === $this) {
-    //             $application->setOffer(null);
-    //         }
-    //     }
+    public function removeApplication(Applications $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getOffer() === $this) {
+                $application->setOffer(null);
+            }
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     /**
      * @return Collection<int, Messages>

@@ -16,7 +16,6 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\RequiredDocumentsController;
-use ApiPlatform\Metadata\ApiProperty;
 
 #[ORM\Entity(repositoryClass: RequiredDocumentsRepository::class)]
 
@@ -98,11 +97,11 @@ class RequiredDocuments
     #[Groups(['read', 'write'])]
     private ?string $informations = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -111,7 +110,7 @@ class RequiredDocuments
     #[Groups(['read', 'write'])]
     private ?Offers $offer = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $name = null;
 
@@ -123,8 +122,8 @@ class RequiredDocuments
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable();
-        $this->updatedAt = new \DateTimeImmutable();
+        $this->setCreatedAt();
+        $this->setUpdatedAt();
         $this->documents = new ArrayCollection();
     }
 

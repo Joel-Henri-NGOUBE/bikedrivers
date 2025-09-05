@@ -15,10 +15,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\VehiclesController;
-use ApiPlatform\Metadata\ApiProperty;
 
 #[ORM\Entity(repositoryClass: VehiclesRepository::class)]
-// #[ApiResource(forceEager: false)]
 // Defines the route that adds a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles',
@@ -78,7 +76,6 @@ use ApiPlatform\Metadata\ApiProperty;
     denormalizationContext: [
         'groups' => ['write:item'],
     ],
-    // forceEager: false
 )]
 
 class Vehicles
@@ -87,26 +84,29 @@ class Vehicles
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['read', 'write'])]
-    // #[ApiProperty(identifier: true)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $type = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $model = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $brand = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $addedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
+    #[Groups(['read', 'write'])]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $purchasedAt = null;
 
@@ -132,8 +132,9 @@ class Vehicles
     public function __construct()
     {
         $this->offers = new ArrayCollection();
-        // $this->pictures = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
         $this->addedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -185,6 +186,18 @@ class Vehicles
     public function setAddedAt(): static
     {
         $this->addedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+        public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): static
+    {
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }

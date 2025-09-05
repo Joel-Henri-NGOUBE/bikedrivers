@@ -15,7 +15,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
-// use App\Controller\ApplicationsController;
 
 #[ORM\Entity(repositoryClass: ApplicationsRepository::class)]
 
@@ -85,17 +84,13 @@ class Applications
     #[Groups(['read', 'write'])]
     private ?int $id = null;
 
-    // #[ORM\ManyToOne(inversedBy: 'applications')]
-    // #[ORM\JoinColumn(nullable: false)]
-    // private ?offer $offer_candidate = null;
-
     #[ORM\ManyToOne(inversedBy: 'applications')]
     #[Groups(['read', 'write'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Offers $offer = null;
 
-    #[ORM\Column]
     #[Groups(['read', 'write'])]
+    #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**
@@ -106,18 +101,11 @@ class Applications
     #[ORM\JoinColumn(nullable: false)]
     private Collection $documents;
 
-    #[ORM\Column(enumType: ApplicationState::class, options: ["default" => ApplicationState::Evaluating])]
+    #[ORM\Column(enumType: ApplicationState::class, nullable: false, options: ["default" => ApplicationState::Evaluating])]
     private ?ApplicationState $state = null;
-
-    // /**
-    //  * @var Collection<int, Documents>
-    //  */
-    // #[ORM\OneToMany(targetEntity: Documents::class, mappedBy: 'applications')]
-    // private Collection $document;
 
     public function __construct()
     {
-        // $this->document = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->documents = new ArrayCollection();
     }
@@ -126,18 +114,6 @@ class Applications
     {
         return $this->id;
     }
-
-    // public function getofferCandidate(): ?offer
-    // {
-    //     return $this->offer_candidate;
-    // }
-
-    // public function setofferCandidate(?offer $offer_candidate): static
-    // {
-    //     $this->offer_candidate = $offer_candidate;
-
-    //     return $this;
-    // }
     
     public function getOffer(): ?Offers
     {
@@ -163,44 +139,6 @@ class Applications
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Documents>
-    //  */
-    // public function getDocument(): Collection
-    // {
-    //     return $this->document;
-    // }
-
-    // public function addDocument(Documents $document): static
-    // {
-    //     if (!$this->documents->contains($document)) {
-    //         $this->documents->add($document);
-    //         $document->setApplications($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeDocument(Documents $document): static
-    // {
-    //     if ($this->documents->removeElement($document)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($document->getApplications() === $this) {
-    //             $document->setApplications(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
-
-    // /**
-    //  * @return Collection<int, Documents>
-    //  */
-    // public function getDocuments(): Collection
-    // {
-    //     return $this->documents;
-    // }
-
     /**
      * @return Collection<int, Documents>
      */
@@ -213,7 +151,6 @@ class Applications
     {
         if (!$this->documents->contains($document)) {
             $this->documents->add($document);
-            // $documents->addApplication($this);
         }
 
         return $this;

@@ -9,7 +9,7 @@ namespace App\Entity\Enums;
 enum Status: string
 {
     case Availaible = 'AVAILABLE';
-    case  Rented = 'RENTED';
+    case Rented = 'RENTED';
     case Bought = "BOUGHT";
     case Inactive = "INACTIVE";
 }

@@ -81,16 +81,20 @@ class Pictures
     #[Vich\UploadableField(mapping: 'pictures', fileNameProperty: 'path')]
     private ?File $pictureFile = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $AddedAt = null;
+    #[ORM\Column(nullable: false)]
+    private ?\DateTimeImmutable $addedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'pictures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Vehicles $vehicle = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function __construct()
     {
-        $this->AddedAt = new \DateTimeImmutable();
+        $this->setAddedAt();
+        $this->setUpdatedAt();
     }
 
     public function getId(): ?int
@@ -120,8 +124,7 @@ class Pictures
         $this->pictureFile = $file;
 
         if($file){
-            // Changer pour mettre updatedAt
-            $this->AddedAt = new \DateTimeImmutable();
+            $this->setUpdatedAt();
         }
 
         return $this;
@@ -129,12 +132,12 @@ class Pictures
 
     public function getAddedAt(): ?\DateTimeImmutable
     {
-        return $this->AddedAt;
+        return $this->addedAt;
     }
 
     public function setAddedAt(): static
     {
-        $this->AddedAt = new \DateTimeImmutable();
+        $this->addedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -147,6 +150,18 @@ class Pictures
     public function setVehicle(?Vehicles $vehicle): static
     {
         $this->vehicle = $vehicle;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): static
+    {
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
