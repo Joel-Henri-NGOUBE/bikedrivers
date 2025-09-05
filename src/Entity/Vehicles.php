@@ -18,14 +18,16 @@ use App\Controller\VehiclesController;
 use ApiPlatform\Metadata\ApiProperty;
 
 #[ORM\Entity(repositoryClass: VehiclesRepository::class)]
-#[ApiResource]
+// #[ApiResource(forceEager: false)]
 // Defines the route that adds a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles',
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
-    operations: [new Post()],
+    operations: [new Post(
+        // read: false
+    )],
     controller: VehiclesController::class
 )]
 
@@ -71,10 +73,12 @@ use ApiPlatform\Metadata\ApiProperty;
 #[ApiResource(
     normalizationContext: [
         'groups' => ['read'],
+        'groups' => ['read:item'],
     ],
     denormalizationContext: [
-        'groups' => ['write'],
+        'groups' => ['write:item'],
     ],
+    // forceEager: false
 )]
 
 class Vehicles
@@ -122,7 +126,7 @@ class Vehicles
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['read:item', 'write:item'])]
     private ?User $user = null;
 
     public function __construct()

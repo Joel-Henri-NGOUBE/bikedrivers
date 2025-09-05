@@ -40,4 +40,13 @@ class RequiredDocumentsRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findOneByIdField($required_document_id): ?RequiredDocuments
+    {
+        return $this->createQueryBuilder('rd')
+            ->andWhere('rd.id = :required_document_id')
+            ->setParameter('required_document_id', $required_document_id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

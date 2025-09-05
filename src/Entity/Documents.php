@@ -104,6 +104,18 @@ class Documents
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, Applications>
+     */
+    #[ORM\ManyToMany(targetEntity: Applications::class, mappedBy: 'documents')]
+    private Collection $applications;
+
+    /**
+     * @var Collection<int, RequiredDocuments>
+     */
+    #[ORM\ManyToMany(targetEntity: RequiredDocuments::class, inversedBy: 'documents')]
+    private Collection $requiredDocuments;
+
     // #[ORM\ManyToOne(inversedBy: 'document')]
     // #[ORM\JoinColumn(nullable: false)]
     // private ?Applications $applications = null;
@@ -111,6 +123,9 @@ class Documents
     public function __construct()
     {
         $this->AddedAt = new \DateTimeImmutable();
+        $this->applications = new ArrayCollection();
+        $this->requiredDocuments = new ArrayCollection();
+        $this->appli = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,4 +209,56 @@ class Documents
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Applications>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Applications $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->addDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Applications $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            $application->removeDocument($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RequiredDocuments>
+     */
+    public function getRequiredDocuments(): Collection
+    {
+        return $this->requiredDocuments;
+    }
+
+    public function addRequiredDocument(RequiredDocuments $requiredDocument): static
+    {
+        if (!$this->requiredDocuments->contains($requiredDocument)) {
+            $this->requiredDocuments->add($requiredDocument);
+        }
+
+        return $this;
+    }
+
+    public function removeRequiredDocument(RequiredDocuments $requiredDocument): static
+    {
+        $this->requiredDocuments->removeElement($requiredDocument);
+
+        return $this;
+    }
+
 }

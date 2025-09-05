@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RequiredDocumentsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -23,8 +25,7 @@ use ApiPlatform\Metadata\ApiProperty;
     uriVariables: [
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
-    operations: [new Post()],
-    controller: RequiredDocumentsController::class
+    operations: [new Post(read: false)],
 )]
 
 #[ApiResource(
@@ -52,7 +53,17 @@ use ApiPlatform\Metadata\ApiProperty;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
         'required_document_id' => new Link(fromClass: RequiredDocuments::class),
     ],
-    operations: [new Patch()]
+    operations: [new Patch()],
+)]
+
+#[ApiResource(
+    uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}/documents/{document_id}',
+    uriVariables: [
+        'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
+        'required_document_id' => new Link(fromClass: RequiredDocuments::class),
+    ],
+    operations: [new Patch()],
+    controller: RequiredDocumentsController::class
 )]
 
 // Defines the route that deletes an operation
@@ -104,10 +115,17 @@ class RequiredDocuments
     #[Groups(['read', 'write'])]
     private ?string $name = null;
 
+    /**
+     * @var Collection<int, Documents>
+     */
+    #[ORM\ManyToMany(targetEntity: Documents::class, mappedBy: 'requiredDocuments')]
+    private Collection $documents;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->documents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,6 +189,33 @@ class RequiredDocuments
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Documents>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Documents $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->addRequiredDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Documents $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            $document->removeRequiredDocument($this);
+        }
 
         return $this;
     }

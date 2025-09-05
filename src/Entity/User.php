@@ -19,9 +19,11 @@ use ApiPlatform\Metadata\ApiProperty;
 #[ApiResource(
     normalizationContext: [
         'groups' => ['read'],
+        'groups' => ['read:collection'],
     ],
     denormalizationContext: [
         'groups' => ['write'],
+        'groups' => ['write:collection'],
     ],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -99,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Vehicles>
      */
     #[ORM\OneToMany(targetEntity: Vehicles::class, mappedBy: 'user')]
-    #[Groups(['read', 'write'])]
+    #[Groups(['read:collection', 'write:collection'])]
     private Collection $vehicles;
 
     /**
