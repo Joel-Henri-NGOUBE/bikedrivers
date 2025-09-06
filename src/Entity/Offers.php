@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\Service;
 use App\Repository\OffersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,7 +17,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\OffersController;
-use App\Controller\GetAnOfferController;
+use App\Controller\Offers as OffersControllers;
 use App\Entity\Enums\Status;
 
 #[ORM\Entity(repositoryClass: OffersRepository::class)]
@@ -39,6 +40,29 @@ use App\Entity\Enums\Status;
 
 // #[ApiResource(
 //     uriTemplate: '/vehicles/{vehicle_id}/offers/{offer_id}',
+//     uriVariables: [
+//         // 'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
+//         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
+//         'offer_id' => new Link(fromClass: Offers::class),
+//     ],
+//     operations: [new Get()],
+//     // controller: GetAnOfferController::class
+// )]
+
+#[ApiResource(
+    uriTemplate: 'users/{user_id}/offers/elements',
+    operations: [new GetCollection()],
+    controller: OffersControllers\SelfOffersElementsController::class
+)]
+
+#[ApiResource(
+    uriTemplate: 'users/{user_id}/offers/applied',
+    operations: [new GetCollection()],
+    controller: OffersControllers\AppliedOffersController::class
+)]
+
+// #[ApiResource(
+//     uriTemplate: '/vehicles/{vehicle_id}/offers/{offer_id}/elements',
 //     uriVariables: [
 //         // 'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
 //         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
@@ -124,13 +148,9 @@ class Offers
     #[Groups(['read', 'write'])]
     private ?string $description = null;
     
-    #[ORM\Column(enumType: Status::class, nullable: false, options: ["default" => Status::Available])]
+    #[ORM\Column(enumType: Status::class, nullable: true, options: ["default" => Status::Available])]
     #[Groups(['read', 'write'])]
     private ?Status $status = null;
-    
-    #[ORM\Column(nullable: true)]
-    #[Groups(['read', 'write'])]
-    private ?\DateTimeImmutable $boughtAt = null;
     
     #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
@@ -142,11 +162,11 @@ class Offers
     
     #[ORM\Column(nullable: true)]
     #[Groups(['read', 'write'])]
-    private ?\DateTimeImmutable $rentedFromAt = null;
+    private ?\DateTimeImmutable $startsAt = null;
     
     #[ORM\Column(nullable: true)]
     #[Groups(['read', 'write'])]
-    private ?\DateTimeImmutable $rentedToAt = null;
+    private ?\DateTimeImmutable $endsAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'offers')]
     #[ORM\JoinColumn(nullable: false)]
@@ -180,6 +200,15 @@ class Offers
     #[ORM\OneToMany(targetEntity: RequiredDocuments::class, mappedBy: 'offer')]
     private Collection $requiredDocuments;
 
+    #[ORM\Column(length: 255, nullable: false)]
+    private ?string $title = null;
+
+    #[ORM\Column(nullable: false)]
+    private ?int $price = null;
+
+    #[ORM\Column(enumType: Service::class, nullable: false, options: ["default" => Service::Location])]
+    private ?Service $service = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -187,6 +216,7 @@ class Offers
         $this->messages = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->status = Status::Available;
         $this->requiredDocuments = new ArrayCollection();
     }
 
@@ -231,18 +261,6 @@ class Offers
         return $this;
     }
 
-    public function getBoughtAt(): ?\DateTimeImmutable
-    {
-        return $this->boughtAt;
-    }
-
-    public function setBoughtAt(): static
-    {
-        $this->boughtAt = new \DateTimeImmutable();
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -267,26 +285,26 @@ class Offers
         return $this;
     }
 
-    public function getRentedFromAt(): ?\DateTimeImmutable
+    public function getStartsAt(): ?\DateTimeImmutable
     {
-        return $this->rentedFromAt;
+        return $this->startsAt;
     }
 
-    public function setRentedFromAt(): static
+    public function setStartsAt(): static
     {
-        $this->rentedFromAt = new \DateTimeImmutable();
+        $this->startsAt = new \DateTimeImmutable();
 
         return $this;
     }
 
-    public function getRentedToAt(): ?\DateTimeImmutable
+    public function getEndsAt(): ?\DateTimeImmutable
     {
-        return $this->rentedToAt;
+        return $this->endsAt;
     }
 
-    public function setRentedToAt(): static
+    public function setEndsAt(): static
     {
-        $this->rentedToAt = new \DateTimeImmutable();
+        $this->endsAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -419,6 +437,42 @@ class Offers
                 $requiredDocument->setOffer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(Service $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }

@@ -6,9 +6,8 @@ namespace App\Entity\Enums;
  * Defines the Enum class Status that will be used to type the Status field of Offer Entity
  */
 
-enum Status: string
+enum Service: string
 {
-    case Available = 'AVAILABLE';
-    case Transacted = 'TRANSACTED';
-    case Inactive = "INACTIVE";
+    case Location = "LOCATION";
+    case Sale = "SALE";
 }

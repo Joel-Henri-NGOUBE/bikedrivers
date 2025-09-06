@@ -70,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Comments>
      */
-    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'RgetUserRecipient')]
+    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'sender')]
     #[Groups(['read', 'write'])]
     private Collection $comments;
 

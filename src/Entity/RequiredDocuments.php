@@ -55,15 +55,15 @@ use App\Controller\RequiredDocumentsController;
     operations: [new Patch()],
 )]
 
-#[ApiResource(
-    uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}/documents/{document_id}',
-    uriVariables: [
-        'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-        'required_document_id' => new Link(fromClass: RequiredDocuments::class),
-    ],
-    operations: [new Patch()],
-    controller: RequiredDocumentsController::class
-)]
+// #[ApiResource(
+//     uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}/documents/{document_id}',
+//     uriVariables: [
+//         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
+//         'required_document_id' => new Link(fromClass: RequiredDocuments::class),
+//     ],
+//     operations: [new Patch()],
+//     controller: RequiredDocumentsController::class
+// )]
 
 // Defines the route that deletes an operation
 #[ApiResource(
@@ -115,16 +115,16 @@ class RequiredDocuments
     private ?string $name = null;
 
     /**
-     * @var Collection<int, Documents>
+     * @var Collection<int, MatchDocuments>
      */
-    #[ORM\ManyToMany(targetEntity: Documents::class, mappedBy: 'requiredDocuments')]
-    private Collection $documents;
+    #[ORM\OneToMany(targetEntity: MatchDocuments::class, mappedBy: 'requiredDocument', orphanRemoval: true)]
+    private Collection $matchDocuments;
 
     public function __construct()
     {
         $this->setCreatedAt();
         $this->setUpdatedAt();
-        $this->documents = new ArrayCollection();
+        $this->matchDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -193,29 +193,33 @@ class RequiredDocuments
     }
 
     /**
-     * @return Collection<int, Documents>
+     * @return Collection<int, MatchDocuments>
      */
-    public function getDocuments(): Collection
+    public function getMatchDocuments(): Collection
     {
-        return $this->documents;
+        return $this->matchDocuments;
     }
 
-    public function addDocument(Documents $document): static
+    public function addMatchDocument(MatchDocuments $matchDocument): static
     {
-        if (!$this->documents->contains($document)) {
-            $this->documents->add($document);
-            $document->addRequiredDocument($this);
+        if (!$this->matchDocuments->contains($matchDocument)) {
+            $this->matchDocuments->add($matchDocument);
+            $matchDocument->setRequiredDocument($this);
         }
 
         return $this;
     }
 
-    public function removeDocument(Documents $document): static
+    public function removeMatchDocument(MatchDocuments $matchDocument): static
     {
-        if ($this->documents->removeElement($document)) {
-            $document->removeRequiredDocument($this);
+        if ($this->matchDocuments->removeElement($matchDocument)) {
+            // set the owning side to null (unless already changed)
+            if ($matchDocument->getRequiredDocument() === $this) {
+                $matchDocument->setRequiredDocument(null);
+            }
         }
 
         return $this;
     }
+
 }

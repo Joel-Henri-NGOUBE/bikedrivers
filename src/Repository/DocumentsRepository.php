@@ -50,4 +50,61 @@ class DocumentsRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findApplierDocumentsByApplicationId($application_id): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        
+        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
+        $query = '
+            SELECT DISTINCT d.path, md.state, rd.name, rd.informations 
+            FROM required_documents rd
+            JOIN match_documents md
+            ON rd.id = md.required_document_id
+            JOIN documents d
+            ON md.document_id = d.id
+            JOIN applications_documents ad
+            ON d.id = ad.documents_id
+            JOIN applications a
+            ON ad.applications_id = a.id
+            WHERE a.id = :application_id
+        ';
+
+        $result = $connection
+        ->executeQuery($query, [
+            // 'user_id' => $user_id,
+            'application_id' => $application_id,
+        ]);
+
+        return $result->fetchAllAssociative();
+    }
+
+    public function findDocumentsAssociatedToAppliedOfferByOfferAndUserId($offer_id, $user_id): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        
+        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
+        $query = '
+            SELECT DISTINCT d.path, md.state, rd.name, rd.informations 
+            FROM users u
+            JOIN documents d
+            ON u.id = d.user_id
+            JOIN match_documents md
+            ON d.id = md.document_id
+            JOIN required_documents rd
+            ON md.required_document_id = rd.id
+            JOIN offers o
+            ON rd.offer_id = o.id
+            WHERE o.id = :offer_id
+            AND d.user_id = :user_id
+        ';
+
+        $result = $connection
+        ->executeQuery($query, [
+            'offer_id' => $offer_id,
+            'user_id' => $user_id,
+        ]);
+
+        return $result->fetchAllAssociative();
+    }
 }

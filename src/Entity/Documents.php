@@ -42,6 +42,18 @@ use App\Controller\Documents as DocumentsControllers;
     operations: [new GetCollection()]
 )]
 
+#[ApiResource(
+    uriTemplate: 'applications/{application_id}/documents/elements',
+    operations: [new GetCollection()],
+    controller: DocumentsControllers\DocumentsElementsController::class
+)]
+
+#[ApiResource(
+    uriTemplate: 'offers/{offer_id}/users/{user_id}/documents/elements',
+    operations: [new GetCollection()],
+    controller: DocumentsControllers\TransferedDocumentsElementsController::class
+)]
+
 // #[ApiResource(
 //     uriTemplate: '/users/{user_id}/documents/{document_id}',
 //     uriVariables: [
@@ -52,15 +64,15 @@ use App\Controller\Documents as DocumentsControllers;
 //     operations: [new Get()]
 // )]
 
-#[ApiResource(
-    uriTemplate: '/users/{user_id}/documents/{document_id}',
-    uriVariables: [
-        'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
-        'document_id' => new Link(fromClass: Documents::class),
-    ],
-    operations: [new Patch()],
-    controller: DocumentsControllers\PatchDocumentController::class
-)]
+// #[ApiResource(
+//     uriTemplate: '/users/{user_id}/documents/{document_id}',
+//     uriVariables: [
+//         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
+//         'document_id' => new Link(fromClass: Documents::class),
+//     ],
+//     operations: [new Patch()],
+//     controller: DocumentsControllers\PatchDocumentController::class
+// )]
 
 #[ApiResource(
     uriTemplate: '/users/{user_id}/documents/{document_id}',
@@ -91,9 +103,6 @@ class Documents
     #[ORM\Column(type: Types::TEXT)]
     private ?string $path = null;
 
-    #[ORM\Column(enumType: Enums\State::class, options: ["default" => State::Unevaluated])]
-    private ?State $state = null;
-
     #[Vich\UploadableField(mapping: 'documents', fileNameProperty: 'path')]
     private ?File $documentFile = null;
 
@@ -110,20 +119,20 @@ class Documents
     #[ORM\ManyToMany(targetEntity: Applications::class, mappedBy: 'documents')]
     private Collection $applications;
 
-    /**
-     * @var Collection<int, RequiredDocuments>
-     */
-    #[ORM\ManyToMany(targetEntity: RequiredDocuments::class, inversedBy: 'documents')]
-    private Collection $requiredDocuments;
-
     #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    /**
+     * @var Collection<int, MatchDocuments>
+     */
+    #[ORM\OneToMany(targetEntity: MatchDocuments::class, mappedBy: 'document', orphanRemoval: true)]
+    private Collection $matchDocuments;
 
     public function __construct()
     {
         $this->addedAt = new \DateTimeImmutable();
         $this->applications = new ArrayCollection();
-        $this->requiredDocuments = new ArrayCollection();
+        $this->matchDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,18 +148,6 @@ class Documents
     public function setPath(string $path): static
     {
         $this->path = $path;
-
-        return $this;
-    }
-
-    public function getState(): ?State
-    {
-        return $this->state;
-    }
-
-    public function setState(State $state): static
-    {
-        $this->state = $state;
 
         return $this;
     }
@@ -222,30 +219,6 @@ class Documents
         return $this;
     }
 
-    /**
-     * @return Collection<int, RequiredDocuments>
-     */
-    public function getRequiredDocuments(): Collection
-    {
-        return $this->requiredDocuments;
-    }
-
-    public function addRequiredDocument(RequiredDocuments $requiredDocument): static
-    {
-        if (!$this->requiredDocuments->contains($requiredDocument)) {
-            $this->requiredDocuments->add($requiredDocument);
-        }
-
-        return $this;
-    }
-
-    public function removeRequiredDocument(RequiredDocuments $requiredDocument): static
-    {
-        $this->requiredDocuments->removeElement($requiredDocument);
-
-        return $this;
-    }
-
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
@@ -254,6 +227,36 @@ class Documents
     public function setUpdatedAt(): static
     {
         $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MatchDocuments>
+     */
+    public function getMatchDocuments(): Collection
+    {
+        return $this->matchDocuments;
+    }
+
+    public function addMatchDocument(MatchDocuments $matchDocument): static
+    {
+        if (!$this->matchDocuments->contains($matchDocument)) {
+            $this->matchDocuments->add($matchDocument);
+            $matchDocument->setDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMatchDocument(MatchDocuments $matchDocument): static
+    {
+        if ($this->matchDocuments->removeElement($matchDocument)) {
+            // set the owning side to null (unless already changed)
+            if ($matchDocument->getDocument() === $this) {
+                $matchDocument->setDocument(null);
+            }
+        }
 
         return $this;
     }

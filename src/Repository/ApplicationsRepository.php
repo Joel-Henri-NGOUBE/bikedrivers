@@ -40,4 +40,32 @@ class ApplicationsRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAppliersByOfferId($offer_id): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        
+        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
+        $query = '
+            SELECT DISTINCT u.id user_id, u.firstname, u.lastname, a.state, a.id application_id, a.created_at application_date
+            FROM users u
+            JOIN documents d
+            ON u.id = d.user_id
+            JOIN applications_documents ad
+            ON d.id = ad.documents_id
+            JOIN applications a
+            ON ad.applications_id = a.id
+            JOIN offers o
+            ON a.offer_id = o.id
+            WHERE o.id = :offer_id
+        ';
+
+        $result = $connection
+        ->executeQuery($query, [
+            // 'user_id' => $user_id,
+            'offer_id' => $offer_id,
+        ]);
+
+        return $result->fetchAllAssociative();
+    }
 }

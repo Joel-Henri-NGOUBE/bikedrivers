@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\Applications\AppliersController;
 
 #[ORM\Entity(repositoryClass: ApplicationsRepository::class)]
 
@@ -36,15 +37,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [new GetCollection()],
 )]
 
-// Defines the route that gets an operation
 #[ApiResource(
-    uriTemplate: '/offers/{offer_id}/applications/{application_id}',
-    uriVariables: [
-        'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-        'application_id' => new Link(fromClass: Applications::class),
-    ],
-    operations: [new Get()]
+    uriTemplate: '/offers/{offer_id}/applications/appliers',
+    operations: [new GetCollection()],
+    controller: AppliersController::class
 )]
+
+// Defines the route that gets an operation
+// #[ApiResource(
+//     uriTemplate: '/offers/{offer_id}/applications/{application_id}',
+//     uriVariables: [
+//         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
+//         'application_id' => new Link(fromClass: Applications::class),
+//     ],
+//     operations: [new Get()]
+// )]
 
 // Defines the route that sets an operation
 #[ApiResource(
@@ -108,6 +115,7 @@ class Applications
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->documents = new ArrayCollection();
+        $this->state = ApplicationState::Evaluating;
     }
 
     public function getId(): ?int

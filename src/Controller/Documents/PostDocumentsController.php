@@ -19,7 +19,7 @@ final class PostDocumentsController extends AbstractController
         $file = $request->files->get('file');
         $newDocument = new Documents();
         $newDocument->setDocumentFile($file);
-        $newDocument->setState(State::Unevaluated);
+        // $newDocument->setState(State::Unevaluated);
 
         // Get the vehicule to which the Document is related
         $user = $userRepository->findOneByIdField($user_id);
