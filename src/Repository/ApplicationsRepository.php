@@ -44,7 +44,7 @@ class ApplicationsRepository extends ServiceEntityRepository
     public function findAppliersByOfferId($offer_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
-        
+
         $query = '
             SELECT DISTINCT u.id user_id, u.firstname, u.lastname, a.state, a.id application_id, a.created_at application_date
             FROM users u
@@ -60,9 +60,9 @@ class ApplicationsRepository extends ServiceEntityRepository
         ';
 
         $result = $connection
-        ->executeQuery($query, [
-            'offer_id' => $offer_id,
-        ]);
+            ->executeQuery($query, [
+                'offer_id' => $offer_id,
+            ]);
 
         return $result->fetchAllAssociative();
     }

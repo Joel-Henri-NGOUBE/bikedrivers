@@ -10,5 +10,5 @@ enum Status: string
 {
     case Available = 'AVAILABLE';
     case Transacted = 'TRANSACTED';
-    case Inactive = "INACTIVE";
+    case Inactive = 'INACTIVE';
 }

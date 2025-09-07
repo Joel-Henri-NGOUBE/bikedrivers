@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class SignUpController extends AbstractController
 {
@@ -46,7 +45,6 @@ class SignUpController extends AbstractController
             'code' => '200',
             'message' => 'User account created successfully',
         ])
-        ->setStatusCode(200);
+            ->setStatusCode(200);
     }
-
 }

@@ -53,7 +53,7 @@ class OffersRepository extends ServiceEntityRepository
 
     public function findOffersElementsByUserId($user_id): array
     {
-        $connection = $this->getEntityManager()->getConnection();     
+        $connection = $this->getEntityManager()->getConnection();
         $query = '
             SELECT o.title title, o.description description, v.model model, v.brand brand, o.id id_offer, o.status
             FROM vehicles v 
@@ -63,9 +63,9 @@ class OffersRepository extends ServiceEntityRepository
         ';
 
         $result = $connection
-        ->executeQuery($query, [
-            'user_id' => $user_id,
-        ]);
+            ->executeQuery($query, [
+                'user_id' => $user_id,
+            ]);
 
         return $result->fetchAllAssociative();
     }
@@ -90,9 +90,9 @@ class OffersRepository extends ServiceEntityRepository
         ';
 
         $result = $connection
-        ->executeQuery($query, [
-            'user_id' => $user_id,
-        ]);
+            ->executeQuery($query, [
+                'user_id' => $user_id,
+            ]);
 
         return $result->fetchAllAssociative();
     }

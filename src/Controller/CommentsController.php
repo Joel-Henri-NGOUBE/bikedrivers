@@ -2,19 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
+use App\Repository\OffersRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\UserRepository;
-use App\Repository\OffersRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Comments;
-use App\Entity\Enums\Status;
 
 final class CommentsController extends AbstractController
 {
-     public function __invoke($user_id, $offer_id, Request $request, UserRepository $userRepository, OffersRepository $offersRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke($user_id, $offer_id, Request $request, UserRepository $userRepository, OffersRepository $offersRepository, EntityManagerInterface $em): JsonResponse
     {
         $payload = $request->getPayload()->all();
         $newComment = new Comments();
@@ -29,5 +27,4 @@ final class CommentsController extends AbstractController
         ]);
 
     }
-
 }

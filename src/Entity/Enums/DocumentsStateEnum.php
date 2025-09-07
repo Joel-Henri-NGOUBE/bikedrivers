@@ -9,6 +9,6 @@ namespace App\Entity\Enums;
 enum State: string
 {
     case Valid = 'VALID';
-    case  Invalid = 'INVALID';
-    case Unevaluated = "UNEVALUATED";
+    case Invalid = 'INVALID';
+    case Unevaluated = 'UNEVALUATED';
 }

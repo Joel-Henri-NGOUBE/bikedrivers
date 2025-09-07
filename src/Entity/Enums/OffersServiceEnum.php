@@ -8,6 +8,6 @@ namespace App\Entity\Enums;
 
 enum Service: string
 {
-    case Location = "LOCATION";
-    case Sale = "SALE";
+    case Location = 'LOCATION';
+    case Sale = 'SALE';
 }

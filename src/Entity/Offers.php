@@ -2,23 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Offers as OffersControllers;
+use App\Controller\OffersController;
 use App\Entity\Enums\Service;
+use App\Entity\Enums\Status;
 use App\Repository\OffersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\OffersController;
-use App\Controller\Offers as OffersControllers;
-use App\Entity\Enums\Status;
 
 #[ORM\Entity(repositoryClass: OffersRepository::class)]
 // Defines the route that adds an operation
@@ -80,10 +80,11 @@ use App\Entity\Enums\Status;
 
 #[ApiResource(
     operations: [new Get(
-    uriTemplate: '/offers/{id}',
-    security: "is_granted('PUBLIC_ACCESS')",
-    write: false
-)])]
+        uriTemplate: '/offers/{id}',
+        security: "is_granted('PUBLIC_ACCESS')",
+        write: false
+    )]
+)]
 
 #[ApiResource(
     operations: [
@@ -117,31 +118,33 @@ class Offers
     #[ORM\Column]
     #[Groups(['read', 'write'])]
     private ?int $id = null;
-    
+
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     #[Groups(['read', 'write'])]
     private ?string $id_taker = null;
-    
+
     #[ORM\Column(type: Types::TEXT, nullable: false)]
     #[Groups(['read', 'write'])]
     private ?string $description = null;
-    
-    #[ORM\Column(enumType: Status::class, nullable: true, options: ["default" => Status::Available])]
+
+    #[ORM\Column(enumType: Status::class, nullable: true, options: [
+        'default' => Status::Available,
+    ])]
     #[Groups(['read', 'write'])]
     private ?Status $status = null;
-    
+
     #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $createdAt = null;
-    
+
     #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $updatedAt = null;
-    
+
     #[ORM\Column(nullable: true)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $startsAt = null;
-    
+
     #[ORM\Column(nullable: true)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $endsAt = null;
@@ -153,21 +156,21 @@ class Offers
 
     /**
      * @var Collection<int, Comments>
-    */
+     */
     #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'offer')]
     #[Groups(['read', 'write'])]
     private Collection $comments;
 
     /**
      * @var Collection<int, Applications>
-    */
+     */
     #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'offer')]
     #[Groups(['read', 'write'])]
     private Collection $applications;
 
     /**
      * @var Collection<int, Messages>
-    */
+     */
     #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'offer')]
     #[Groups(['read', 'write'])]
     private Collection $messages;
@@ -184,7 +187,9 @@ class Offers
     #[ORM\Column(nullable: false)]
     private ?int $price = null;
 
-    #[ORM\Column(enumType: Service::class, nullable: false, options: ["default" => Service::Location])]
+    #[ORM\Column(enumType: Service::class, nullable: false, options: [
+        'default' => Service::Location,
+    ])]
     private ?Service $service = null;
 
     public function __construct()
@@ -310,7 +315,7 @@ class Offers
 
     public function addComment(Comments $comment): static
     {
-        if (!$this->comments->contains($comment)) {
+        if (! $this->comments->contains($comment)) {
             $this->comments->add($comment);
             $comment->setOffer($this);
         }
@@ -340,7 +345,7 @@ class Offers
 
     public function addApplication(Applications $application): static
     {
-        if (!$this->applications->contains($application)) {
+        if (! $this->applications->contains($application)) {
             $this->applications->add($application);
             $application->setOffer($this);
         }
@@ -370,7 +375,7 @@ class Offers
 
     public function addMessage(Messages $message): static
     {
-        if (!$this->messages->contains($message)) {
+        if (! $this->messages->contains($message)) {
             $this->messages->add($message);
             $message->setOffer($this);
         }
@@ -400,7 +405,7 @@ class Offers
 
     public function addRequiredDocument(RequiredDocuments $requiredDocument): static
     {
-        if (!$this->requiredDocuments->contains($requiredDocument)) {
+        if (! $this->requiredDocuments->contains($requiredDocument)) {
             $this->requiredDocuments->add($requiredDocument);
             $requiredDocument->setOffer($this);
         }
@@ -455,5 +460,4 @@ class Offers
 
         return $this;
     }
-    
 }

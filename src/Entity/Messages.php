@@ -2,18 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Messages as MessagesControllers;
 use App\Repository\MessagesRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
-use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\Messages as MessagesControllers;
 
 #[ORM\Entity(repositoryClass: MessagesRepository::class)]
 
@@ -58,7 +55,6 @@ use App\Controller\Messages as MessagesControllers;
         'groups' => ['write'],
     ],
 )]
-
 
 class Messages
 {

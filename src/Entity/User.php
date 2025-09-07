@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`users`')]
@@ -112,6 +112,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->documents = new ArrayCollection();
     }
 
+    /**
+     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     */
+    public function __serialize(): array
+    {
+        $data = (array) $this;
+        $data["\0" . self::class . "\0password"] = hash('crc32c', (string) $this->password);
+
+        return $data;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -174,17 +185,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
-    }
-
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
-    public function __serialize(): array
-    {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', (string) $this->password);
-
-        return $data;
     }
 
     #[\Deprecated]
@@ -251,7 +251,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addComment(Comments $comment): static
     {
-        if (!$this->comments->contains($comment)) {
+        if (! $this->comments->contains($comment)) {
             $this->comments->add($comment);
             $comment->setSender($this);
         }
@@ -281,7 +281,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addMessageSent(Messages $messageSent): static
     {
-        if (!$this->messagesSent->contains($messageSent)) {
+        if (! $this->messagesSent->contains($messageSent)) {
             $this->messagesSent->add($messageSent);
             $messageSent->setUserSender($this);
         }
@@ -311,7 +311,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addMessageReceived(Messages $messageReceived): static
     {
-        if (!$this->messagesReceived->contains($messageReceived)) {
+        if (! $this->messagesReceived->contains($messageReceived)) {
             $this->messagesReceived->add($messageReceived);
             $messageReceived->setUserRecipient($this);
         }
@@ -341,7 +341,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addVehicle(Vehicles $vehicle): static
     {
-        if (!$this->vehicles->contains($vehicle)) {
+        if (! $this->vehicles->contains($vehicle)) {
             $this->vehicles->add($vehicle);
             $vehicle->setUser($this);
         }
@@ -371,7 +371,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addDocument(Documents $document): static
     {
-        if (!$this->documents->contains($document)) {
+        if (! $this->documents->contains($document)) {
             $this->documents->add($document);
             $document->setUser($this);
         }
@@ -390,5 +390,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

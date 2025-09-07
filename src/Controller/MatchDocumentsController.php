@@ -2,19 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\MatchDocuments;
+use App\Repository\DocumentsRepository;
+use App\Repository\RequiredDocumentsRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\RequiredDocumentsRepository;
-use App\Repository\DocumentsRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\MatchDocuments;
-use App\Entity\Enums\Status;
 
 final class MatchDocumentsController extends AbstractController
 {
-     public function __invoke($required_document_id, $document_id, Request $request, RequiredDocumentsRepository $requiredDocumentRepository, DocumentsRepository $documentsRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke($required_document_id, $document_id, Request $request, RequiredDocumentsRepository $requiredDocumentRepository, DocumentsRepository $documentsRepository, EntityManagerInterface $em): JsonResponse
     {
         $payload = $request->getPayload()->all();
         $newMatchDocument = new MatchDocuments();
@@ -28,5 +26,4 @@ final class MatchDocumentsController extends AbstractController
         ]);
 
     }
-
 }

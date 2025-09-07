@@ -2,20 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Applications\AppliersController;
 use App\Entity\Enums\ApplicationState;
 use App\Repository\ApplicationsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\Applications\AppliersController;
 
 #[ORM\Entity(repositoryClass: ApplicationsRepository::class)]
 
@@ -98,7 +97,9 @@ class Applications
     #[ORM\JoinColumn(nullable: false)]
     private Collection $documents;
 
-    #[ORM\Column(enumType: ApplicationState::class, nullable: false, options: ["default" => ApplicationState::Evaluating])]
+    #[ORM\Column(enumType: ApplicationState::class, nullable: false, options: [
+        'default' => ApplicationState::Evaluating,
+    ])]
     private ?ApplicationState $state = null;
 
     public function __construct()
@@ -112,7 +113,7 @@ class Applications
     {
         return $this->id;
     }
-    
+
     public function getOffer(): ?Offers
     {
         return $this->offer;
@@ -147,7 +148,7 @@ class Applications
 
     public function addDocument(Documents $document): static
     {
-        if (!$this->documents->contains($document)) {
+        if (! $this->documents->contains($document)) {
             $this->documents->add($document);
         }
 
@@ -172,5 +173,4 @@ class Applications
 
         return $this;
     }
-
 }

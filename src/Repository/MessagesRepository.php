@@ -46,11 +46,11 @@ class MessagesRepository extends ServiceEntityRepository
             ';
 
         $result = $connection
-        ->executeQuery($query, [
-            'user_id' => $user_id,
-            'offer_id' => $offer_id,
-            'offer_owner_id' => $offer_owner_id,
-        ]);
+            ->executeQuery($query, [
+                'user_id' => $user_id,
+                'offer_id' => $offer_id,
+                'offer_owner_id' => $offer_owner_id,
+            ]);
 
         return $result->fetchAllAssociative();
     }
@@ -65,9 +65,8 @@ class MessagesRepository extends ServiceEntityRepository
             ->setParameter('message', $message_id)
             ->getQuery()
             ->execute();
-            ;
 
-        return $this->createQueryBuilder('m')    
+        return $this->createQueryBuilder('m')
             ->where('m.id = :message')
             ->setParameter('message', $message_id)
             ->getQuery()
@@ -95,10 +94,10 @@ class MessagesRepository extends ServiceEntityRepository
             ';
 
         $result = $connection
-        ->executeQuery($query, [
-            'user_id' => $publisher_id,
-            'offer_id' => $offer_id,
-        ]);
+            ->executeQuery($query, [
+                'user_id' => $publisher_id,
+                'offer_id' => $offer_id,
+            ]);
 
         return $result->fetchAllAssociative();
     }
@@ -106,11 +105,11 @@ class MessagesRepository extends ServiceEntityRepository
     public function deleteByIdField($message_id): void
     {
         $this->createQueryBuilder('m')
-        ->delete()
-        ->where('m.id = :message_id')
-        ->setParameter(':message_id', $message_id)
-        ->getQuery()
-        ->execute()
+            ->delete()
+            ->where('m.id = :message_id')
+            ->setParameter(':message_id', $message_id)
+            ->getQuery()
+            ->execute()
         ;
     }
 

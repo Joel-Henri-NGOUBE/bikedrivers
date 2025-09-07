@@ -9,6 +9,6 @@ namespace App\Entity\Enums;
 enum ApplicationState: string
 {
     case Rejected = 'REJECTED';
-    case  Accepted = 'ACCEPTED';
-    case Evaluating = "EVALUATING";
+    case Accepted = 'ACCEPTED';
+    case Evaluating = 'EVALUATING';
 }

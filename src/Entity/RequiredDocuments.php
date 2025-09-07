@@ -2,20 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\RequiredDocumentsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\RequiredDocumentsController;
 
 #[ORM\Entity(repositoryClass: RequiredDocumentsRepository::class)]
 
@@ -192,7 +191,7 @@ class RequiredDocuments
 
     public function addMatchDocument(MatchDocuments $matchDocument): static
     {
-        if (!$this->matchDocuments->contains($matchDocument)) {
+        if (! $this->matchDocuments->contains($matchDocument)) {
             $this->matchDocuments->add($matchDocument);
             $matchDocument->setRequiredDocument($this);
         }
@@ -211,5 +210,4 @@ class RequiredDocuments
 
         return $this;
     }
-
 }

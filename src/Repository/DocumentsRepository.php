@@ -54,7 +54,7 @@ class DocumentsRepository extends ServiceEntityRepository
     public function findApplierDocumentsByApplicationId($application_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
-        
+
         $query = '
             SELECT DISTINCT d.path, md.state, rd.name, rd.informations 
             FROM required_documents rd
@@ -70,9 +70,9 @@ class DocumentsRepository extends ServiceEntityRepository
         ';
 
         $result = $connection
-        ->executeQuery($query, [
-            'application_id' => $application_id,
-        ]);
+            ->executeQuery($query, [
+                'application_id' => $application_id,
+            ]);
 
         return $result->fetchAllAssociative();
     }
@@ -80,7 +80,7 @@ class DocumentsRepository extends ServiceEntityRepository
     public function findDocumentsAssociatedToAppliedOfferByOfferAndUserId($offer_id, $user_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
-        
+
         $query = '
             SELECT DISTINCT d.path, md.state, rd.name, rd.informations 
             FROM users u
@@ -97,10 +97,10 @@ class DocumentsRepository extends ServiceEntityRepository
         ';
 
         $result = $connection
-        ->executeQuery($query, [
-            'offer_id' => $offer_id,
-            'user_id' => $user_id,
-        ]);
+            ->executeQuery($query, [
+                'offer_id' => $offer_id,
+                'user_id' => $user_id,
+            ]);
 
         return $result->fetchAllAssociative();
     }

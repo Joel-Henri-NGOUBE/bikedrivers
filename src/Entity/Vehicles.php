@@ -2,19 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\VehiclesController;
 use App\Repository\VehiclesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\VehiclesController;
 
 #[ORM\Entity(repositoryClass: VehiclesRepository::class)]
 // Defines the route that adds a vehicle
@@ -190,7 +190,7 @@ class Vehicles
         return $this;
     }
 
-        public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -224,7 +224,7 @@ class Vehicles
 
     public function addOffer(Offers $offer): static
     {
-        if (!$this->offers->contains($offer)) {
+        if (! $this->offers->contains($offer)) {
             $this->offers->add($offer);
             $offer->setVehicle($this);
         }
@@ -254,7 +254,7 @@ class Vehicles
 
     public function addPicture(Pictures $picture): static
     {
-        if (!$this->pictures->contains($picture)) {
+        if (! $this->pictures->contains($picture)) {
             $this->pictures->add($picture);
             $picture->setVehicle($this);
         }

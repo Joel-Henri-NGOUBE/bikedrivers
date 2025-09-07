@@ -2,18 +2,16 @@
 
 namespace App\Controller\Documents;
 
+use App\Entity\Documents;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Documents;
-use App\Entity\Enums\State;
 
 final class PostDocumentsController extends AbstractController
 {
-     public function __invoke($user_id, Request $request, userRepository $userRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke($user_id, Request $request, userRepository $userRepository, EntityManagerInterface $em): JsonResponse
     {
         // Retrieve the Document transfered in the form
         $file = $request->files->get('file');
@@ -25,7 +23,7 @@ final class PostDocumentsController extends AbstractController
         $user->addDocument($newDocument);
         $em->persist($newDocument);
         $em->flush();
-        
+
         // Rename the Document in the database
         $newDocument->setPath('/media/documents/' . $newDocument->getPath());
         $em->persist($newDocument);
@@ -36,6 +34,4 @@ final class PostDocumentsController extends AbstractController
         ]);
 
     }
-
 }
-

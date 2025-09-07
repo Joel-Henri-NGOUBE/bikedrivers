@@ -2,24 +2,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Documents as DocumentsControllers;
 use App\Repository\DocumentsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
-use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\DocumentsController;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use App\Entity\Enums\State;
-use App\Controller\Documents as DocumentsControllers;
 
 #[ORM\Entity(repositoryClass: DocumentsRepository::class)]
 
@@ -138,7 +133,7 @@ class Documents
     {
         $this->documentFile = $file;
 
-        if($file){
+        if ($file) {
             $this->setUpdatedAt();
         }
 
@@ -179,7 +174,7 @@ class Documents
 
     public function addApplication(Applications $application): static
     {
-        if (!$this->applications->contains($application)) {
+        if (! $this->applications->contains($application)) {
             $this->applications->add($application);
             $application->addDocument($this);
         }
@@ -218,7 +213,7 @@ class Documents
 
     public function addMatchDocument(MatchDocuments $matchDocument): static
     {
-        if (!$this->matchDocuments->contains($matchDocument)) {
+        if (! $this->matchDocuments->contains($matchDocument)) {
             $this->matchDocuments->add($matchDocument);
             $matchDocument->setDocument($this);
         }
@@ -237,5 +232,4 @@ class Documents
 
         return $this;
     }
-
 }
