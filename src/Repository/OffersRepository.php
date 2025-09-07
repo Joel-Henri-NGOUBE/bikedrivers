@@ -53,8 +53,7 @@ class OffersRepository extends ServiceEntityRepository
 
     public function findOffersElementsByUserId($user_id): array
     {
-        $connection = $this->getEntityManager()->getConnection();
-        
+        $connection = $this->getEntityManager()->getConnection();     
         $query = '
             SELECT o.title title, o.description description, v.model model, v.brand brand, o.id id_offer, o.status
             FROM vehicles v 
@@ -74,7 +73,6 @@ class OffersRepository extends ServiceEntityRepository
     public function findAppliedOffersByUserId($user_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
-        
         $query = '
             SELECT DISTINCT o.title title, o.description description, v.model model, v.brand brand, o.id id_offer, o.status, a.created_at application_date 
             FROM users u
