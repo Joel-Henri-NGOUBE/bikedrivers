@@ -55,7 +55,6 @@ class DocumentsRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
         
-        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
         $query = '
             SELECT DISTINCT d.path, md.state, rd.name, rd.informations 
             FROM required_documents rd
@@ -72,7 +71,6 @@ class DocumentsRepository extends ServiceEntityRepository
 
         $result = $connection
         ->executeQuery($query, [
-            // 'user_id' => $user_id,
             'application_id' => $application_id,
         ]);
 
@@ -83,7 +81,6 @@ class DocumentsRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
         
-        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
         $query = '
             SELECT DISTINCT d.path, md.state, rd.name, rd.informations 
             FROM users u

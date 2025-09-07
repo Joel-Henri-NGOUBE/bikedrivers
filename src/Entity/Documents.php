@@ -26,9 +26,6 @@ use App\Controller\Documents as DocumentsControllers;
 #[Vich\Uploadable]
 #[ApiResource(
     uriTemplate: 'users/{user_id}/documents',
-    // uriVariables: [
-    //     'document_id' => new Link(fromClass: documents::class, toProperty: 'document')
-    // ],
     operations: [new Post()],
     controller: DocumentsControllers\PostDocumentsController::class
 )]
@@ -53,26 +50,6 @@ use App\Controller\Documents as DocumentsControllers;
     operations: [new GetCollection()],
     controller: DocumentsControllers\TransferedDocumentsElementsController::class
 )]
-
-// #[ApiResource(
-//     uriTemplate: '/users/{user_id}/documents/{document_id}',
-//     uriVariables: [
-        // 'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
-//         'user_id' => new Link(fromClass: User::class, toClass: documents::class, fromProperty: 'documents'),
-//         'document_id' => new Link(fromClass: documents::class),
-//     ],
-//     operations: [new Get()]
-// )]
-
-// #[ApiResource(
-//     uriTemplate: '/users/{user_id}/documents/{document_id}',
-//     uriVariables: [
-//         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
-//         'document_id' => new Link(fromClass: Documents::class),
-//     ],
-//     operations: [new Patch()],
-//     controller: DocumentsControllers\PatchDocumentController::class
-// )]
 
 #[ApiResource(
     uriTemplate: '/users/{user_id}/documents/{document_id}',

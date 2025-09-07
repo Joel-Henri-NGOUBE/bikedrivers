@@ -26,54 +26,25 @@ use App\Controller\Messages as MessagesControllers;
 
 // Defines the route that gets an operation
 #[ApiResource(
-    // L'utilisateur envoyant des messages et n'étant pas initiateur de l'offre
-    // C'est à moi de créer le controleur et les autres controleurs
     uriTemplate: '/offers/{offer_id}/users/{user_id}/messages',
-    // uriVariables: [
-        // 'sender_id' => new Link(fromClass: User::class, toClass: Messages::class, toProperty: 'user_sender'),
-        // // 'sender_id' => new Link(fromClass: User::class, toProperty: 'user'),
-        // 'recipient_id' => new Link(fromClass: User::class, toClass: Messages::class, toProperty: 'user_recipient'),
-        // 'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-        // // 'message_id' => new Link(fromClass: Messages::class),
-    // ],
     operations: [new GetCollection()],
     controller: MessagesControllers\GetMessagesController::class
 )]
 
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/messages/users',
-    // uriVariables: [
-    //     // 'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-    //     'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-    //     'offer_id' => new Link(fromClass: Offers::class),
-    // ],
     operations: [new GetCollection()],
     controller: MessagesControllers\GetUsersController::class
-    // controller: GetAnOfferController::class
 )]
 
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/users/{user_id}/messages/{message_id}',
-    // uriVariables: [
-    //     'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-    //     'sender_id' => new Link(fromClass: User::class, toProperty: 'user_sender'),
-    //     'recipient_id' => new Link(fromClass: User::class, toProperty: 'user_recipient'),
-    //     // 'sender_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-    //     'message_id' => new Link(fromClass: Messages::class),
-    // ],
     operations: [new Patch()],
     controller: MessagesControllers\PatchMessageController::class
 )]
 
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/users/{user_id}/messages/{message_id}',
-    // uriVariables: [
-    //     'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-    //     'sender_id' => new Link(fromClass: User::class, toProperty: 'user_sender'),
-    //     'recipient_id' => new Link(fromClass: User::class, toProperty: 'user_recipient'),
-    //     // 'sender_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-    //     'message_id' => new Link(fromClass: Messages::class),
-    // ],
     operations: [new Delete()],
     controller: MessagesControllers\DeleteMessageController::class
 )]

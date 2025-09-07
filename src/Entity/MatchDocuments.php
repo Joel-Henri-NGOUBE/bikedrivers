@@ -24,25 +24,6 @@ use App\Controller\MatchDocumentsController;
     controller: MatchDocumentsController::class
 )]
 
-// Defines the route that gets an operation
-// #[ApiResource(
-//     uriTemplate: '/documents/{document_id}/match_documents',
-//     uriVariables: [
-//         'document_id' => new Link(fromClass: Documents::class, toProperty: 'document'),
-//     ],
-//     operations: [new GetCollection()]
-// )]
-
-// Defines the route that gets all the operations
-// #[ApiResource(
-//     uriTemplate: '/required_documents/{required_document_id}/documents/{document_id}/match_documents',
-//     uriVariables: [
-//         'required_document_id' => new Link(fromClass: RequiredDocuments::class, toProperty: 'requiredDocument'),
-//         'document_id' => new Link(fromClass: Documents::class, toProperty: 'document'),
-//     ],
-//     operations: [new GetCollection()]
-// )]
-
 #[ApiResource(
     uriTemplate: '/required_documents/{required_document_id}/documents/{document_id}/match_documents/{match_document_id}',
     uriVariables: [

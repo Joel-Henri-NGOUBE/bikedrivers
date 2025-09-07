@@ -43,16 +43,6 @@ use App\Controller\Applications\AppliersController;
     controller: AppliersController::class
 )]
 
-// Defines the route that gets an operation
-// #[ApiResource(
-//     uriTemplate: '/offers/{offer_id}/applications/{application_id}',
-//     uriVariables: [
-//         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-//         'application_id' => new Link(fromClass: Applications::class),
-//     ],
-//     operations: [new Get()]
-// )]
-
 // Defines the route that sets an operation
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/{application_id}',

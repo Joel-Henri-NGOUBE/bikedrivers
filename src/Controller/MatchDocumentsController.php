@@ -18,7 +18,6 @@ final class MatchDocumentsController extends AbstractController
     {
         $payload = $request->getPayload()->all();
         $newMatchDocument = new MatchDocuments();
-        // $newMatchDocument->setState(associateState($payload['state']));
         $requiredDocumentRepository->findOneByIdField($required_document_id)->addMatchDocument($newMatchDocument);
         $documentsRepository->findOneByIdField($document_id)->addMatchDocument($newMatchDocument);
         $em->persist($newMatchDocument);
@@ -31,14 +30,3 @@ final class MatchDocumentsController extends AbstractController
     }
 
 }
-
-// function associateState($string){
-//     switch ($string) {
-//         case 'UNEVALUATED':
-//             return State::Unevaluated;
-//         case 'VALID':
-//             return State::Valid;
-//         case 'INVALID':
-//             return State::Invalid;
-//     }
-// }

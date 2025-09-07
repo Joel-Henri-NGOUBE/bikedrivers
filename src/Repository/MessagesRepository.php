@@ -39,7 +39,6 @@ class MessagesRepository extends ServiceEntityRepository
             ->orWhere('m.user_sender = :user')
             ->setParameter('offer', $offer_id)
             ->setParameter('user', $user_id)
-            // ->orderBy('m.createdAt', 'ASC')
             ->getQuery()
             ->getResult()
         ;
@@ -50,7 +49,6 @@ class MessagesRepository extends ServiceEntityRepository
         $this->createQueryBuilder('m')
             ->update()
             ->set('m.content', ':content')
-            // ->set('m.createdAt', new \DateTimeImmutable())
             ->andWhere('m.id = :message')
             ->setParameter('content', $content)
             ->setParameter('message', $message_id)

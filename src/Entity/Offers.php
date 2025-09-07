@@ -38,17 +38,6 @@ use App\Entity\Enums\Status;
     operations: [new GetCollection()]
 )]
 
-// #[ApiResource(
-//     uriTemplate: '/vehicles/{vehicle_id}/offers/{offer_id}',
-//     uriVariables: [
-//         // 'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-//         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-//         'offer_id' => new Link(fromClass: Offers::class),
-//     ],
-//     operations: [new Get()],
-//     // controller: GetAnOfferController::class
-// )]
-
 #[ApiResource(
     uriTemplate: 'users/{user_id}/offers/elements',
     operations: [new GetCollection()],
@@ -60,17 +49,6 @@ use App\Entity\Enums\Status;
     operations: [new GetCollection()],
     controller: OffersControllers\AppliedOffersController::class
 )]
-
-// #[ApiResource(
-//     uriTemplate: '/vehicles/{vehicle_id}/offers/{offer_id}/elements',
-//     uriVariables: [
-//         // 'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-//         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-//         'offer_id' => new Link(fromClass: Offers::class),
-//     ],
-//     operations: [new Get()],
-//     // controller: GetAnOfferController::class
-// )]
 
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers/{offer_id}',

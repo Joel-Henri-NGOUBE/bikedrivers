@@ -55,16 +55,6 @@ use App\Controller\RequiredDocumentsController;
     operations: [new Patch()],
 )]
 
-// #[ApiResource(
-//     uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}/documents/{document_id}',
-//     uriVariables: [
-//         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-//         'required_document_id' => new Link(fromClass: RequiredDocuments::class),
-//     ],
-//     operations: [new Patch()],
-//     controller: RequiredDocumentsController::class
-// )]
-
 // Defines the route that deletes an operation
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}',

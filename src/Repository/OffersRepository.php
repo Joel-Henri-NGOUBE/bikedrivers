@@ -55,7 +55,6 @@ class OffersRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
         
-        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
         $query = '
             SELECT o.title title, o.description description, v.model model, v.brand brand, o.id id_offer, o.status
             FROM vehicles v 
@@ -67,7 +66,6 @@ class OffersRepository extends ServiceEntityRepository
         $result = $connection
         ->executeQuery($query, [
             'user_id' => $user_id,
-            // 'offer_id' => $offer_id,
         ]);
 
         return $result->fetchAllAssociative();
@@ -77,7 +75,6 @@ class OffersRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
         
-        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
         $query = '
             SELECT DISTINCT o.title title, o.description description, v.model model, v.brand brand, o.id id_offer, o.status, a.created_at application_date 
             FROM users u
@@ -97,7 +94,6 @@ class OffersRepository extends ServiceEntityRepository
         $result = $connection
         ->executeQuery($query, [
             'user_id' => $user_id,
-            // 'offer_id' => $offer_id,
         ]);
 
         return $result->fetchAllAssociative();

@@ -21,9 +21,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 #[ApiResource(
     uriTemplate: 'users/{user_id}/vehicles/{vehicle_id}/pictures',
-    // uriVariables: [
-    //     'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle')
-    // ],
     operations: [new Post()],
     controller: PicturesController::class
 )]
@@ -37,16 +34,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     ],
     operations: [new GetCollection()]
 )]
-
-// #[ApiResource(
-//     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/pictures/{picture_id}',
-//     uriVariables: [
-//         'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-//         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-//         'picture_id' => new Link(fromClass: Pictures::class),
-//     ],
-//     operations: [new Get()]
-// )]
 
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/pictures/{picture_id}',

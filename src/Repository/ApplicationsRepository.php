@@ -45,7 +45,6 @@ class ApplicationsRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
         
-        // 'SELECT title, description FROM offers WHERE vehicle_id IN (SELECT id FROM vehicles WHERE user_id = :user_id)'
         $query = '
             SELECT DISTINCT u.id user_id, u.firstname, u.lastname, a.state, a.id application_id, a.created_at application_date
             FROM users u
@@ -62,7 +61,6 @@ class ApplicationsRepository extends ServiceEntityRepository
 
         $result = $connection
         ->executeQuery($query, [
-            // 'user_id' => $user_id,
             'offer_id' => $offer_id,
         ]);
 

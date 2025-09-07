@@ -32,27 +32,6 @@ use App\Controller\CommentsController;
     operations: [new GetCollection()]
 )]
 
-// Defines the route that gets all the operations
-// #[ApiResource(
-//     uriTemplate: '/users/{user_id}/offers/{offer_id}/comments',
-//     uriVariables: [
-//         'user_id' => new Link(fromClass: User::class, toProperty: 'sender'),
-//         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-//     ],
-//     operations: [new GetCollection()]
-// )]
-
-// Defines the route that sets an operation
-// #[ApiResource(
-//     uriTemplate: '/users/{user_id}/offers/{offer_id}/comments/{comment_id}',
-//     uriVariables: [
-//         'user_id' => new Link(fromClass: User::class, toProperty: 'sender'),
-//         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-//         'comment_id' => new Link(fromClass: Comments::class),
-//     ],
-//     operations: [new Patch()]
-// )]
-
 // Defines the route that deletes an operation
 #[ApiResource(
     uriTemplate: '/users/{user_id}/offers/{offer_id}/comments/{comment_id}',
