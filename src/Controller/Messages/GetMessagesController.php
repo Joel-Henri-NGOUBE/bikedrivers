@@ -16,7 +16,7 @@ final class GetMessagesController extends AbstractController
 {
      public function __invoke($offer_id, $user_id, Request $request, MessagesRepository $messagesRepository, OffersRepository $offersRepository, UserRepository $userRepository, EntityManagerInterface $em): JsonResponse
     {
-        $messages = $messagesRepository->findByUserFields($offer_id, $user_id);
+        $messages = $messagesRepository->findByUserFields($offer_id, $user_id, $offersRepository->findOneByIdField($offer_id)->getVehicle()->getUser()->getId());
 
 
         return $this->json($messages);

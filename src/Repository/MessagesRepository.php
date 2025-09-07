@@ -31,17 +31,28 @@ class MessagesRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findByUserFields($offer_id, $user_id): array
+    public function findByUserFields($offer_id, $user_id, $offer_owner_id): array
     {
-        return $this->createQueryBuilder('m')
-            ->where('m.offer = :offer')
-            ->andWhere('m.user_recipient = :user')
-            ->orWhere('m.user_sender = :user')
-            ->setParameter('offer', $offer_id)
-            ->setParameter('user', $user_id)
-            ->getQuery()
-            ->getResult()
-        ;
+        $connection = $this->getEntityManager()->getConnection();
+
+        $query = '
+            SELECT * FROM messages
+            WHERE offer_id = :offer_id
+            AND ((user_recipient_id = :user_id 
+            AND user_sender_id = :offer_owner_id)
+            OR (user_recipient_id = :offer_owner_id
+            AND user_sender_id = :user_id))
+            ;
+            ';
+
+        $result = $connection
+        ->executeQuery($query, [
+            'user_id' => $user_id,
+            'offer_id' => $offer_id,
+            'offer_owner_id' => $offer_owner_id,
+        ]);
+
+        return $result->fetchAllAssociative();
     }
 
     public function setContentById($message_id, $content): array
@@ -71,13 +82,13 @@ class MessagesRepository extends ServiceEntityRepository
         $query = '
             SELECT CONCAT(firstname, " ", lastname) users FROM users 
             WHERE id IN (
-                SELECT user_recipient_id FROM messages
-                WHERE user_recipient_id <> :user_id
+                SELECT user_sender_id FROM messages
+                WHERE user_recipient_id = :user_id
                 AND offer_id = :offer_id
                 )
             OR id IN (
-                SELECT user_sender_id FROM messages
-                WHERE user_sender_id <> :user_id
+                SELECT user_recipient_id FROM messages
+                WHERE user_sender_id = :user_id
                 AND offer_id = :offer_id
                 )
             ;

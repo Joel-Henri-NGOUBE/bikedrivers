@@ -195,6 +195,7 @@ class Offers
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->status = Status::Available;
+        $this->service = Service::Location;
         $this->requiredDocuments = new ArrayCollection();
     }
 
