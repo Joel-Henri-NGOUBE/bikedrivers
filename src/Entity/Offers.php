@@ -24,8 +24,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 // Defines the route that adds an operation
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers',
-    operations: [new Post()],
-    controller: OffersController::class
+    operations: [new Post(read: false)],
+    // controller: OffersController::class
 )]
 
 // Defines the route that gets an operation
@@ -60,15 +60,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [new Patch()]
 )]
 
-#[ApiResource(
-    uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers/{offer_id}',
-    uriVariables: [
-        'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-        'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-        'offer_id' => new Link(fromClass: Offers::class),
-    ],
-    operations: [new Delete()]
-)]
+// #[ApiResource(
+//     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers/{offer_id}',
+//     uriVariables: [
+//         'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
+//         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
+//         'offer_id' => new Link(fromClass: Offers::class),
+//     ],
+//     operations: [new Delete()]
+// )]
 
 #[ApiResource(
     operations: [
@@ -77,6 +77,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
     uriTemplate: '/offers',
     security: "is_granted('PUBLIC_ACCESS')",
 )]
+
+// #[ApiResource(
+//     operations: [
+//         new GetCollection(write: false),
+//     ],
+//     uriTemplate: '/offers/{id}',
+//     security: "is_granted('PUBLIC_ACCESS')",
+// )]
 
 #[ApiResource(
     operations: [new Get(
@@ -96,7 +104,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Patch(write: false, read: false),
-        new Delete(write: false, read: false),
+        new Delete(),
     ],
     uriTemplate: '/offers/{id}'
 )]

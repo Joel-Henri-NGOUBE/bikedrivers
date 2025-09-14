@@ -33,6 +33,15 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 
 #[ApiResource(
+    uriTemplate: '/vehicles/{vehicle_id}/pictures',
+    uriVariables: [
+        'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
+    ],
+    security: "is_granted('PUBLIC_ACCESS')",
+    operations: [new GetCollection()]
+)]
+
+#[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/pictures/{picture_id}',
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),

@@ -24,11 +24,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
     operations: [new Post(
-        // read: false
     )],
     controller: VehiclesController::class
 )]
 
+// Defines the route that gets all users' vehicles
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles',
     uriVariables: [
@@ -37,7 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [new GetCollection()],
 )]
 
-// Defines the route that gets an operation
+// Defines the route that gets a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}',
     uriVariables: [

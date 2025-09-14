@@ -5,10 +5,12 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Applications\AppliersController;
+use App\Controller\Applications\HasAppliedController;
 use App\Entity\Enums\ApplicationState;
 use App\Repository\ApplicationsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -40,6 +42,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
     uriTemplate: '/offers/{offer_id}/applications/appliers',
     operations: [new GetCollection()],
     controller: AppliersController::class
+)]
+
+#[ApiResource(
+    uriTemplate: '/offers/{offer_id}/applications/users/{user_id}/hasApplied',
+    operations: [new Get()],
+    controller: HasAppliedController::class
 )]
 
 // Defines the route that sets an operation

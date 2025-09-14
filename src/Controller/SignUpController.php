@@ -47,4 +47,13 @@ class SignUpController extends AbstractController
         ])
             ->setStatusCode(200);
     }
+
+    #[Route('/api/id', name: 'id', methods: ['POST'])]
+    public function getId(Request $request, UserRepository $userRepository): JsonResponse
+    {
+        $payload = $request->getPayload()->all();
+        return $this->json([
+            'id' => $userRepository->findOneByMailField($payload['mail'])->getId(),
+        ]);
+    }
 }

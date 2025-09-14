@@ -41,6 +41,34 @@ class ApplicationsRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    public function findIfUserHasApplied($offer_id, $user_id): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $query = '
+            SELECT DISTINCT u.firstname, u.lastname
+            FROM users u
+            JOIN documents d
+            ON u.id = d.user_id
+            JOIN applications_documents ad
+            ON d.id = ad.documents_id
+            JOIN applications a
+            ON ad.applications_id = a.id
+            JOIN offers o
+            ON a.offer_id = o.id
+            WHERE o.id = :offer_id
+            AND u.id = :user_id
+        ';
+
+        $result = $connection
+            ->executeQuery($query, [
+                'offer_id' => $offer_id,
+                'user_id' => $user_id,
+            ]);
+
+        return $result->fetchAllAssociative();
+    }    
+
     public function findAppliersByOfferId($offer_id): array
     {
         $connection = $this->getEntityManager()->getConnection();

@@ -56,7 +56,7 @@ class DocumentsRepository extends ServiceEntityRepository
         $connection = $this->getEntityManager()->getConnection();
 
         $query = '
-            SELECT DISTINCT d.path, md.state, rd.name, rd.informations 
+            SELECT DISTINCT d.path, md.state, rd.name, rd.informations, v.model, v.brand, v.type, o.title, o.id offer_id, a.state application_state
             FROM required_documents rd
             JOIN match_documents md
             ON rd.id = md.required_document_id
@@ -66,6 +66,10 @@ class DocumentsRepository extends ServiceEntityRepository
             ON d.id = ad.documents_id
             JOIN applications a
             ON ad.applications_id = a.id
+            JOIN offers o
+            ON a.offer_id = o.id
+            JOIN vehicles v
+            ON o.vehicle_id = v.id
             WHERE a.id = :application_id
         ';
 

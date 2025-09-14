@@ -55,7 +55,7 @@ class OffersRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
         $query = '
-            SELECT o.title title, o.description description, v.model model, v.brand brand, o.id id_offer, o.status
+            SELECT o.title title, v.type, v.model model, v.brand brand, o.id id_offer, o.status
             FROM vehicles v 
             JOIN offers o 
             ON v.id = o.vehicle_id
@@ -74,7 +74,7 @@ class OffersRepository extends ServiceEntityRepository
     {
         $connection = $this->getEntityManager()->getConnection();
         $query = '
-            SELECT DISTINCT o.title title, o.description description, v.model model, v.brand brand, o.id id_offer, o.status, a.created_at application_date 
+            SELECT DISTINCT o.title title, v.model model, v.brand brand, o.id id_offer, o.status, a.state, a.created_at application_date 
             FROM users u
             JOIN documents d
             ON u.id = d.user_id
