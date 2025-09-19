@@ -3,9 +3,9 @@ name: BikeDrivers API Deployment
 
 on:
   push:
-    branches: [ "main", "testsAndQuality" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "testsAndQuality" ]
+    branches: [ "main" ]
 
 jobs:
   build:
