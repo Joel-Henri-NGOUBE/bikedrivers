@@ -6,6 +6,14 @@ COPY composer.json /bikedrivers_frontend
 
 COPY . /bikedrivers_frontend
 
+ARG MYSQL_USER
+
+ARG MYSQL_PASSWORD
+
+ARG MYSQL_HOST
+
+ARG MYSQL_PORT
+
 ENV DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/bikedrivers_api"
 
 RUN docker-php-ext-install pdo pdo_mysql
