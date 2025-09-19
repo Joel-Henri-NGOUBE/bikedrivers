@@ -20,9 +20,6 @@ RUN docker-php-ext-install pdo pdo_mysql
 
 RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS https://getcomposer.org/installer | php \
   && chmod +x composer.phar && mv composer.phar /usr/local/bin/composer
-
-RUN php bin/console lexik:jwt:generate-keypair --skip-if-exists
-
 # RUN apt install build-essential checkinstall zlib1g-dev -y
 
 # RUN cd /usr/local/src/
@@ -38,6 +35,8 @@ RUN php bin/console lexik:jwt:generate-keypair --skip-if-exists
 # RUN openssl version -a
 
 RUN composer install
+
+RUN php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 CMD ["./commands.sh"]
 
