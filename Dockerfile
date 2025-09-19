@@ -14,7 +14,7 @@ ARG MYSQL_HOST
 
 ARG MYSQL_PORT
 
-ENV DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/bikedrivers_api"
+# ENV DATABASE_URL="mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/bikedrivers_api"
 
 RUN docker-php-ext-install pdo pdo_mysql
 
