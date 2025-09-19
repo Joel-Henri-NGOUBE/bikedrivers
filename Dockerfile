@@ -38,7 +38,7 @@ RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS http
 
 # RUN cd openssl-3.0.7
 
-# RUN chmod +x commands.sh
+RUN chmod +x commands.sh
 
 # RUN openssl version -a
 
