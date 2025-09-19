@@ -25,9 +25,9 @@ RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS http
 
 # RUN echo "" >> config/jwt/public.pem
 
-RUN openssl genrsa -out config/jwt/private.pem -aes256 4096
+# RUN openssl genrsa -out config/jwt/private.pem -aes256 4096
 
-RUN openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+# RUN openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 # RUN apt install build-essential checkinstall zlib1g-dev -y
 
 # RUN cd /usr/local/src/
