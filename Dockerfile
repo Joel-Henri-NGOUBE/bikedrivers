@@ -1,12 +1,12 @@
 FROM php:8.2-apache
 
-WORKDIR /mybank
+WORKDIR /bikedrivers_frontend
 
-COPY composer.json /mybank
+COPY composer.json /bikedrivers_frontend
 
-COPY . /mybank
+COPY . /bikedrivers_frontend
 
-ENV DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/bikedrivers_api
+# ENV DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/bikedrivers_api
 
 RUN docker-php-ext-install pdo pdo_mysql
 
