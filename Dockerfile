@@ -13,6 +13,8 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS https://getcomposer.org/installer | php \
   && chmod +x composer.phar && mv composer.phar /usr/local/bin/composer
 
+RUN chmod +x commands.sh
+
 RUN composer install
 
 CMD ["./commands.sh"]
