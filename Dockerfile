@@ -44,7 +44,7 @@ RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS http
 
 RUN composer install
 
-RUN php bin/console lexik:jwt:generate-keypair --skip-if-exists
+# RUN php bin/console lexik:jwt:generate-keypair --skip-if-exists
 
 CMD ["./commands.sh"]
 
