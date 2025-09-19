@@ -1,4 +1,4 @@
-echo "$DATABASE_URL"
+echo "$DATABASE_URL is the DB URL"
 # php bin/console doctrine:database:create --if-not-exists
 php bin/console lexik:jwt:generate-keypair --skip-if-exists
 php bin/console make:migration
