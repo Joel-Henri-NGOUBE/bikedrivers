@@ -37,7 +37,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     uriTemplate: 'applications/{application_id}/documents/elements',
     operations: [new GetCollection()],
-    controller: DocumentsControllers\DocumentsElementsController::class
+    controller: DocumentsControllers\DocumentsElementsController::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 #[ApiResource(
@@ -88,7 +89,7 @@ class Documents
     /**
      * @var Collection<int, Applications>
      */
-    #[ORM\ManyToMany(targetEntity: Applications::class, mappedBy: 'documents')]
+    #[ORM\ManyToMany(targetEntity: Applications::class, mappedBy: 'documents', orphanRemoval: true)]
     private Collection $applications;
 
     #[ORM\Column(nullable: false)]

@@ -19,7 +19,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     uriTemplate: 'users/{user_id}/vehicles/{vehicle_id}/pictures',
     operations: [new Post()],
-    controller: PicturesController::class
+    controller: PicturesController::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defines the route that gets an operation
@@ -29,7 +30,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
     ],
-    operations: [new GetCollection()]
+    operations: [new GetCollection()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 #[ApiResource(
@@ -48,7 +50,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
         'picture_id' => new Link(fromClass: Pictures::class),
     ],
-    operations: [new Delete()]
+    operations: [new Delete()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defining serializer options

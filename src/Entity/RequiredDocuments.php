@@ -24,6 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
     operations: [new Post(read: false)],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 #[ApiResource(
@@ -52,6 +53,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'required_document_id' => new Link(fromClass: RequiredDocuments::class),
     ],
     operations: [new Patch()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defines the route that deletes an operation
@@ -61,7 +63,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
         'required_document_id' => new Link(fromClass: RequiredDocuments::class),
     ],
-    operations: [new Delete()]
+    operations: [new Delete()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defining serializer options

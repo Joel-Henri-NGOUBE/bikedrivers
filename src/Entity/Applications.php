@@ -27,6 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
     operations: [new Post(read: false)],
+    security: "is_granted('ROLE_ADMIN')"
     // controller: applicationsController::class
 )]
 
@@ -35,13 +36,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
     uriVariables: [
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
-    operations: [new GetCollection()],
+    security: "is_granted('ROLE_ADMIN')",
+    operations: [new GetCollection()]
 )]
 
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/appliers',
     operations: [new GetCollection()],
-    controller: AppliersController::class
+    security: "is_granted('ROLE_ADMIN')",
+    controller: AppliersController::class,
 )]
 
 #[ApiResource(
@@ -57,6 +60,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
         'application_id' => new Link(fromClass: Applications::class),
     ],
+    security: "is_granted('ROLE_ADMIN')",
     operations: [new Patch()]
 )]
 
@@ -67,6 +71,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
         'application_id' => new Link(fromClass: Applications::class),
     ],
+    security: "is_granted('ROLE_ADMIN')",
     operations: [new Delete()]
 )]
 
@@ -100,7 +105,7 @@ class Applications
     /**
      * @var Collection<int, Documents>
      */
-    #[ORM\ManyToMany(targetEntity: Documents::class, inversedBy: 'applications')]
+    #[ORM\ManyToMany(targetEntity: Documents::class, inversedBy: 'applications', orphanRemoval: true)]
     #[Groups(['read', 'write'])]
     #[ORM\JoinColumn(nullable: false)]
     private Collection $documents;

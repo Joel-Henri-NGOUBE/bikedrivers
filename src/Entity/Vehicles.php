@@ -25,7 +25,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     operations: [new Post(
     )],
-    controller: VehiclesController::class
+    controller: VehiclesController::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defines the route that gets all users' vehicles
@@ -35,6 +36,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
     operations: [new GetCollection()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defines the route that gets a vehicle
@@ -44,7 +46,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
-    operations: [new Get()]
+    operations: [new Get()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defines the route that sets an operation
@@ -54,7 +57,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
-    operations: [new Patch()]
+    operations: [new Patch()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defines the route that deletes an operation
@@ -64,7 +68,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
-    operations: [new Delete()]
+    operations: [new Delete()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defining serializer options
@@ -113,14 +118,14 @@ class Vehicles
     /**
      * @var Collection<int, Offers>
      */
-    #[ORM\OneToMany(targetEntity: Offers::class, mappedBy: 'vehicle')]
+    #[ORM\OneToMany(targetEntity: Offers::class, mappedBy: 'vehicle', orphanRemoval: true)]
     #[Groups(['read', 'write'])]
     private Collection $offers;
 
     /**
      * @var Collection<int, Pictures>
      */
-    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'vehicle')]
+    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'vehicle', orphanRemoval: true)]
     #[Groups(['read', 'write'])]
     private Collection $pictures;
 

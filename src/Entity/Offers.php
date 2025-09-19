@@ -25,6 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers',
     operations: [new Post(read: false)],
+    security: "is_granted('ROLE_ADMIN')"
     // controller: OffersController::class
 )]
 
@@ -35,7 +36,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
     ],
-    operations: [new GetCollection()]
+    operations: [new GetCollection()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 #[ApiResource(
@@ -57,18 +59,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
         'offer_id' => new Link(fromClass: Offers::class),
     ],
-    operations: [new Patch()]
+    operations: [new Patch()],
+    security: "is_granted('ROLE_ADMIN')"
 )]
-
-// #[ApiResource(
-//     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers/{offer_id}',
-//     uriVariables: [
-//         'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-//         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-//         'offer_id' => new Link(fromClass: Offers::class),
-//     ],
-//     operations: [new Delete()]
-// )]
 
 #[ApiResource(
     operations: [
@@ -98,7 +91,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Post(write: false, read: false),
     ],
-    uriTemplate: '/offers'
+    uriTemplate: '/offers',
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 #[ApiResource(
@@ -106,7 +100,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Patch(write: false, read: false),
         new Delete(),
     ],
-    uriTemplate: '/offers/{id}'
+    uriTemplate: '/offers/{id}',
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defining serializer options
@@ -163,37 +158,23 @@ class Offers
     private ?Vehicles $vehicle = null;
 
     /**
-     * @var Collection<int, Comments>
-     */
-    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'offer')]
-    #[Groups(['read', 'write'])]
-    private Collection $comments;
-
-    /**
      * @var Collection<int, Applications>
      */
-    #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'offer')]
+    #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'offer', orphanRemoval: true)]
     #[Groups(['read', 'write'])]
     private Collection $applications;
 
     /**
-     * @var Collection<int, Messages>
-     */
-    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'offer')]
-    #[Groups(['read', 'write'])]
-    private Collection $messages;
-
-    /**
      * @var Collection<int, RequiredDocuments>
      */
-    #[ORM\OneToMany(targetEntity: RequiredDocuments::class, mappedBy: 'offer')]
+    #[ORM\OneToMany(targetEntity: RequiredDocuments::class, mappedBy: 'offer', orphanRemoval: true)]
     private Collection $requiredDocuments;
 
     #[ORM\Column(length: 255, nullable: false)]
     private ?string $title = null;
 
     #[ORM\Column(nullable: false)]
-    private ?int $price = null;
+    private ?float $price = null;
 
     #[ORM\Column(enumType: Service::class, nullable: false, options: [
         'default' => Service::Location,
@@ -202,9 +183,7 @@ class Offers
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
         $this->applications = new ArrayCollection();
-        $this->messages = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->status = Status::Available;
@@ -314,36 +293,6 @@ class Offers
     }
 
     /**
-     * @return Collection<int, Comments>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comments $comment): static
-    {
-        if (! $this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setOffer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comments $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getOffer() === $this) {
-                $comment->setOffer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Applications>
      */
     public function getApplications(): Collection
@@ -367,36 +316,6 @@ class Offers
             // set the owning side to null (unless already changed)
             if ($application->getOffer() === $this) {
                 $application->setOffer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Messages>
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Messages $message): static
-    {
-        if (! $this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setOffer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Messages $message): static
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getOffer() === $this) {
-                $message->setOffer(null);
             }
         }
 

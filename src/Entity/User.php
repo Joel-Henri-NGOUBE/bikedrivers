@@ -68,44 +68,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
-     * @var Collection<int, Comments>
-     */
-    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'sender')]
-    #[Groups(['read', 'write'])]
-    private Collection $comments;
-
-    /**
-     * @var Collection<int, Messages>
-     */
-    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'user_sender')]
-    #[Groups(['read', 'write'])]
-    private Collection $messagesSent;
-
-    /**
-     * @var Collection<int, Messages>
-     */
-    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'user_recipient')]
-    #[Groups(['read', 'write'])]
-    private Collection $messagesReceived;
-
-    /**
      * @var Collection<int, Vehicles>
      */
-    #[ORM\OneToMany(targetEntity: Vehicles::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Vehicles::class, mappedBy: 'user', orphanRemoval: true)]
     #[Groups(['read:collection', 'write:collection'])]
     private Collection $vehicles;
 
     /**
      * @var Collection<int, Documents>
      */
-    #[ORM\OneToMany(targetEntity: Documents::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Documents::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $documents;
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
-        $this->messagesSent = new ArrayCollection();
-        $this->messagesReceived = new ArrayCollection();
         $this->vehicles = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
@@ -237,96 +213,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(): static
     {
         $this->updatedAt = new \DateTimeImmutable();
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Comments>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comments $comment): static
-    {
-        if (! $this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comments $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getSender() === $this) {
-                $comment->setSender(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Messages>
-     */
-    public function getMessagesSent(): Collection
-    {
-        return $this->messagesSent;
-    }
-
-    public function addMessageSent(Messages $messageSent): static
-    {
-        if (! $this->messagesSent->contains($messageSent)) {
-            $this->messagesSent->add($messageSent);
-            $messageSent->setUserSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessageSent(Messages $messageSent): static
-    {
-        if ($this->messagesSent->removeElement($messageSent)) {
-            // set the owning side to null (unless already changed)
-            if ($messageSent->getUserSender() === $this) {
-                $messageSent->setUserSender(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Messages>
-     */
-    public function getMessagesReceived(): Collection
-    {
-        return $this->messagesReceived;
-    }
-
-    public function addMessageReceived(Messages $messageReceived): static
-    {
-        if (! $this->messagesReceived->contains($messageReceived)) {
-            $this->messagesReceived->add($messageReceived);
-            $messageReceived->setUserRecipient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessageReceived(Messages $messageReceived): static
-    {
-        if ($this->messagesReceived->removeElement($messageReceived)) {
-            // set the owning side to null (unless already changed)
-            if ($messageReceived->getUserRecipient() === $this) {
-                $messageReceived->setUserRecipient(null);
-            }
-        }
 
         return $this;
     }
