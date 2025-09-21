@@ -2,9 +2,9 @@ name: BikeDrivers Backend Audit
 
 on:
   push:
-    branches: [ "main", "testAndQuality-2" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "testAndQuality-2" ]
+    branches: [ "main" ]
 
 jobs:
   audit:
