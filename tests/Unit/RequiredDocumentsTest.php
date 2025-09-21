@@ -16,26 +16,26 @@ final class RequiredDocumentsTest extends TestCase
         $this->requiredDocument = new RequiredDocuments();
     }
 
-    public function testGetAndSetInformations()
+    public function testGetAndSetInformations(): void
     {
         $this->requiredDocument->setInformations('Your document must last less than 3 months');
         $this->assertEquals('Your document must last less than 3 months', $this->requiredDocument->getInformations());
     }
 
-    public function testGetAndSetName()
+    public function testGetAndSetName(): void
     {
         $this->requiredDocument->setName('Fiche de paie');
         $this->assertEquals('Fiche de paie', $this->requiredDocument->getName());
     }
 
-    public function testGetAndAddMatchDocuments()
+    public function testGetAndAddMatchDocuments(): void
     {
         $newMatchDocument = new MatchDocuments();
         $this->requiredDocument->addMatchDocument($newMatchDocument);
         $this->assertTrue($this->requiredDocument->getMatchDocuments()->contains($newMatchDocument));
     }
 
-    public function testRemoveMatchDocument()
+    public function testRemoveMatchDocument(): void
     {
         $newMatchDocument = new MatchDocuments();
         $this->requiredDocument->addMatchDocument($newMatchDocument);
@@ -44,7 +44,7 @@ final class RequiredDocumentsTest extends TestCase
         $this->assertFalse($this->requiredDocument->getMatchDocuments()->contains($newMatchDocument));
     }
 
-    public function testGetAndSetOffer()
+    public function testGetAndSetOffer(): void
     {
         $newOffer = new Offers();
         $this->requiredDocument->setOffer($newOffer);

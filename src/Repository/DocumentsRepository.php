@@ -41,7 +41,7 @@ class DocumentsRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findOneByIdField($document_id): ?Documents
+    public function findOneByIdField(int | string $document_id): ?Documents
     {
         return $this->createQueryBuilder('d')
             ->andWhere('d.id = :document_id')
@@ -51,7 +51,10 @@ class DocumentsRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findApplierDocumentsByApplicationId($application_id): array
+    /**
+     * @return array<mixed>
+     */
+    public function findApplierDocumentsByApplicationId(int | string $application_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
 
@@ -81,7 +84,10 @@ class DocumentsRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
-    public function findDocumentsAssociatedToAppliedOfferByOfferAndUserId($offer_id, $user_id): array
+    /**
+     * @return array<mixed>
+     */
+    public function findDocumentsAssociatedToAppliedOfferByOfferAndUserId(int | string $offer_id, int | string $user_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
 

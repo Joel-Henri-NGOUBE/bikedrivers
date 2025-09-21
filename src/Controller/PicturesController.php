@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class PicturesController extends AbstractController
 {
-    public function __invoke($user_id, $vehicle_id, Request $request, PicturesRepository $picturesRepository, VehiclesRepository $vehiclesRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $user_id, int | string $vehicle_id, Request $request, PicturesRepository $picturesRepository, VehiclesRepository $vehiclesRepository, EntityManagerInterface $em): JsonResponse
     {
         // Retrieve the picture transfered in the form
         $file = $request->files->get('file');

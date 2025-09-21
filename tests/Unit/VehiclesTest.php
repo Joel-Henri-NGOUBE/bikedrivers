@@ -17,39 +17,39 @@ final class VehiclesTest extends TestCase
         $this->vehicle = new Vehicles();
     }
 
-    public function testGetAndSetType()
+    public function testGetAndSetType(): void
     {
         $this->vehicle->setType('Voiture');
         $this->assertEquals('Voiture', $this->vehicle->getType());
     }
 
-    public function testGetAndSetModel()
+    public function testGetAndSetModel(): void
     {
         $this->vehicle->setModel('Clio 5');
         $this->assertEquals('Clio 5', $this->vehicle->getModel());
     }
 
-    public function testGetAndSetBrand()
+    public function testGetAndSetBrand(): void
     {
         $this->vehicle->setBrand('Renault');
         $this->assertEquals('Renault', $this->vehicle->getBrand());
     }
 
-    public function testGetAndSetPurchasedAt()
+    public function testGetAndSetPurchasedAt(): void
     {
         $purchasedAt = new \DateTimeImmutable();
         $this->vehicle->setPurchasedAt($purchasedAt);
         $this->assertEquals($purchasedAt, $this->vehicle->getPurchasedAt());
     }
 
-    public function testGetAndAddOffers()
+    public function testGetAndAddOffers(): void
     {
         $newOffer = new Offers();
         $this->vehicle->addOffer($newOffer);
         $this->assertTrue($this->vehicle->getOffers()->contains($newOffer));
     }
 
-    public function testRemoveOffer()
+    public function testRemoveOffer(): void
     {
         $newOffer = new Offers();
         $this->vehicle->addOffer($newOffer);
@@ -58,14 +58,14 @@ final class VehiclesTest extends TestCase
         $this->assertFalse($this->vehicle->getOffers()->contains($newOffer));
     }
 
-    public function testGetAndAddPictures()
+    public function testGetAndAddPictures(): void
     {
         $newPicture = new Pictures();
         $this->vehicle->addPicture($newPicture);
         $this->assertTrue($this->vehicle->getPictures()->contains($newPicture));
     }
 
-    public function testRemovePicture()
+    public function testRemovePicture(): void
     {
         $newPicture = new Pictures();
         $this->vehicle->addPicture($newPicture);
@@ -74,7 +74,7 @@ final class VehiclesTest extends TestCase
         $this->assertFalse($this->vehicle->getPictures()->contains($newPicture));
     }
 
-    public function testGetAndSetUser()
+    public function testGetAndSetUser(): void
     {
         $newUser = new User();
         $this->vehicle->setUser($newUser);

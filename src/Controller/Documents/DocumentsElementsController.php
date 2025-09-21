@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class DocumentsElementsController extends AbstractController
 {
-    public function __invoke($application_id, Request $request, DocumentsRepository $documentsRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $application_id, Request $request, DocumentsRepository $documentsRepository, EntityManagerInterface $em): JsonResponse
     {
         $documentsElements = $documentsRepository->findApplierDocumentsByApplicationId($application_id);
 

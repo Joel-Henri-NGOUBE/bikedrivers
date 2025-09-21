@@ -19,64 +19,64 @@ final class OffersTest extends TestCase
         $this->offer = new Offers();
     }
 
-    public function testGetAndSetIdTaker()
+    public function testGetAndSetIdTaker(): void
     {
         $this->offer->setIdTaker(2);
         $this->assertEquals(2, $this->offer->getIdTaker());
     }
 
-    public function testGetAndSetDescription()
+    public function testGetAndSetDescription(): void
     {
         $this->offer->setDescription("I'm describing my car");
         $this->assertEquals("I'm describing my car", $this->offer->getDescription());
     }
 
-    public function testGetAndSetStatus()
+    public function testGetAndSetStatus(): void
     {
         $this->offer->setStatus(Status::Inactive);
         $this->assertEquals(Status::Inactive, $this->offer->getStatus());
     }
 
-    public function testGetAndSetStartsAt()
+    public function testGetAndSetStartsAt(): void
     {
         $startsAt = new \DateTimeImmutable();
         $this->offer->setStartsAt($startsAt);
         $this->assertEquals($startsAt, $this->offer->getStartsAt());
     }
 
-    public function testGetAndSetEndsAt()
+    public function testGetAndSetEndsAt(): void
     {
         $endsAt = new \DateTimeImmutable();
         $this->offer->setEndsAt($endsAt);
         $this->assertEquals($endsAt, $this->offer->getEndsAt());
     }
 
-    public function testGetAndSetTitle()
+    public function testGetAndSetTitle(): void
     {
         $this->offer->setTitle('My car is the best');
         $this->assertEquals('My car is the best', $this->offer->getTitle());
     }
 
-    public function testGetAndSetPrice()
+    public function testGetAndSetPrice(): void
     {
         $this->offer->setPrice(12000);
         $this->assertEquals(12000, $this->offer->getPrice());
     }
 
-    public function testGetAndSetService()
+    public function testGetAndSetService(): void
     {
         $this->offer->setService(Service::Sale);
         $this->assertEquals(Service::Sale, $this->offer->getService());
     }
 
-    public function testGetAndAddApplications()
+    public function testGetAndAddApplications(): void
     {
         $newApplication = new Applications();
         $this->offer->addApplication($newApplication);
         $this->assertTrue($this->offer->getApplications()->contains($newApplication));
     }
 
-    public function testRemoveApplication()
+    public function testRemoveApplication(): void
     {
         $newApplication = new Applications();
         $this->offer->addApplication($newApplication);
@@ -85,14 +85,14 @@ final class OffersTest extends TestCase
         $this->assertFalse($this->offer->getApplications()->contains($newApplication));
     }
 
-    public function testGetAndAddRequiredDocuments()
+    public function testGetAndAddRequiredDocuments(): void
     {
         $newRequiredDocument = new RequiredDocuments();
         $this->offer->addRequiredDocument($newRequiredDocument);
         $this->assertTrue($this->offer->getRequiredDocuments()->contains($newRequiredDocument));
     }
 
-    public function testRemoveRequiredDocument()
+    public function testRemoveRequiredDocument(): void
     {
         $newRequiredDocument = new RequiredDocuments();
         $this->offer->addRequiredDocument($newRequiredDocument);
@@ -101,7 +101,7 @@ final class OffersTest extends TestCase
         $this->assertFalse($this->offer->getRequiredDocuments()->contains($newRequiredDocument));
     }
 
-    public function testGetAndSetVehicle()
+    public function testGetAndSetVehicle(): void
     {
         $newVehicle = new Vehicles();
         $this->offer->setVehicle($newVehicle);

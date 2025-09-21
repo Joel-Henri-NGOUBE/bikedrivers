@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class HasAppliedController extends AbstractController
 {
-    public function __invoke($offer_id, $user_id, Request $request, ApplicationsRepository $applicationsRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $offer_id, int | string $user_id, Request $request, ApplicationsRepository $applicationsRepository, EntityManagerInterface $em): JsonResponse
     {
         $user = $applicationsRepository->findIfUserHasApplied($offer_id, $user_id);
 

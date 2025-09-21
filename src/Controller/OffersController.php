@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class OffersController extends AbstractController
 {
-    public function __invoke($user_id, $vehicle_id, Request $request, VehiclesRepository $vehiclesRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $user_id, int | string $vehicle_id, Request $request, VehiclesRepository $vehiclesRepository, EntityManagerInterface $em): JsonResponse
     {
         $payload = $request->getPayload()->all();
         $newOffer = new Offers();
@@ -33,7 +33,7 @@ final class OffersController extends AbstractController
     }
 }
 
-function associateService($string)
+function associateService(string $string)
 {
     switch ($string) {
         case 'LOCATION':

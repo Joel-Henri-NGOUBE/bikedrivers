@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class SelfOffersElementsController extends AbstractController
 {
-    public function __invoke($user_id, Request $request, OffersRepository $offersRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $user_id, Request $request, OffersRepository $offersRepository, EntityManagerInterface $em): JsonResponse
     {
         $elements = $offersRepository->findOffersElementsByUserId($user_id);
 

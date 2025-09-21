@@ -33,7 +33,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function findOneByMailField($mail): ?User
+    public function findOneByMailField(string $mail): ?User
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.mail = :mail')
@@ -43,7 +43,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
-    public function findOneByIdField($id): ?User
+    public function findOneByIdField(int | string $id): ?User
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.id = :id')

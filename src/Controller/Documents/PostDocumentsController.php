@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class PostDocumentsController extends AbstractController
 {
-    public function __invoke($user_id, Request $request, userRepository $userRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $user_id, Request $request, userRepository $userRepository, EntityManagerInterface $em): JsonResponse
     {
         // Retrieve the Document transfered in the form
         $file = $request->files->get('file');

@@ -41,7 +41,10 @@ class ApplicationsRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findIfUserHasApplied($offer_id, $user_id): array
+    /**
+     * @return array<mixed>
+     */
+    public function findIfUserHasApplied(int | string $offer_id, int | string $user_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
 
@@ -69,7 +72,10 @@ class ApplicationsRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
-    public function findAppliersByOfferId($offer_id): array
+    /**
+     * @return array<mixed>
+     */
+    public function findAppliersByOfferId(int | string $offer_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
 

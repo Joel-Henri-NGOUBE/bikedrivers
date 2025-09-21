@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class AppliedOffersController extends AbstractController
 {
-    public function __invoke($user_id, Request $request, OffersRepository $offersRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | float $user_id, Request $request, OffersRepository $offersRepository, EntityManagerInterface $em): JsonResponse
     {
         $appliedOffers = $offersRepository->findAppliedOffersByUserId($user_id);
 

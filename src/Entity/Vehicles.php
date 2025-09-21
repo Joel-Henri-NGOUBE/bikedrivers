@@ -75,8 +75,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 // Defining serializer options
 #[ApiResource(
     normalizationContext: [
-        'groups' => ['read'],
-        'groups' => ['read:item'],
+        'groups' => ['read', 'read:item'],
     ],
     denormalizationContext: [
         'groups' => ['write:item'],

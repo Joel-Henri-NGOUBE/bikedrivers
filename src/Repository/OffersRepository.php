@@ -41,7 +41,7 @@ class OffersRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findOneByIdField($id): ?Offers
+    public function findOneByIdField(int | string $id): ?Offers
     {
         return $this->createQueryBuilder('o')
             ->andWhere('o.id = :id')
@@ -51,7 +51,10 @@ class OffersRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOffersElementsByUserId($user_id): array
+    /**
+     * @return array<mixed>
+     */
+    public function findOffersElementsByUserId(int | string $user_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
         $query = '
@@ -70,7 +73,10 @@ class OffersRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
-    public function findAppliedOffersByUserId($user_id): array
+    /**
+     * @return array<mixed>
+     */
+    public function findAppliedOffersByUserId(int | string $user_id): array
     {
         $connection = $this->getEntityManager()->getConnection();
         $query = '

@@ -17,12 +17,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 // Defining serializer options
 #[ApiResource(
     normalizationContext: [
-        'groups' => ['read'],
-        'groups' => ['read:collection'],
+        'groups' => ['read', 'read:collection'],
     ],
     denormalizationContext: [
-        'groups' => ['write'],
-        'groups' => ['write:collection'],
+        'groups' => ['write', 'write:collection'],
     ],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface

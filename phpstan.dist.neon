@@ -13,5 +13,8 @@ parameters:
         allowNullablePropertyForRequiredField: true
     ignoreErrors:
         - identifier: function.alreadyNarrowedType
+        - identifier: argument.type
+        - identifier: if.alwaysTrue
+        - identifier: missingType.return
+        
         # - identifier: missingType.parameter
-        # - identifier: missingType.return

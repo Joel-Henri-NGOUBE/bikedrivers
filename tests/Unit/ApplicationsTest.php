@@ -17,27 +17,27 @@ final class ApplicationsTest extends TestCase
         $this->application = new Applications();
     }
 
-    public function testGetAndSetState()
+    public function testGetAndSetState(): void
     {
         $this->application->setState(ApplicationState::Accepted);
         $this->assertEquals(ApplicationState::Accepted, $this->application->getState());
     }
 
-    public function testGetAndSetOffer()
+    public function testGetAndSetOffer(): void
     {
         $newOffer = new Offers();
         $this->application->setOffer($newOffer);
         $this->assertEquals($newOffer, $this->application->getOffer());
     }
 
-    public function testGetAndAddDocuments()
+    public function testGetAndAddDocuments(): void
     {
         $newDocument = new Documents();
         $this->application->addDocument($newDocument);
         $this->assertTrue($this->application->getDocuments()->contains($newDocument));
     }
 
-    public function testRemoveDocument()
+    public function testRemoveDocument(): void
     {
         $newDocument = new Documents();
         $this->application->addDocument($newDocument);

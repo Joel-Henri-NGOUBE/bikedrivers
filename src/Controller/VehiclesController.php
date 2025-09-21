@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class VehiclesController extends AbstractController
 {
-    public function __invoke($user_id, Request $request, UserRepository $userRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $user_id, Request $request, UserRepository $userRepository, EntityManagerInterface $em): JsonResponse
     {
         $payload = $request->getPayload()->all();
         $newVehicle = new Vehicles();

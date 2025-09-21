@@ -16,20 +16,20 @@ final class PicturesTest extends TestCase
         $this->picture = new Pictures();
     }
 
-    public function testGetAndSetPath()
+    public function testGetAndSetPath(): void
     {
         $this->picture->setPath('mypicture.jpeg');
         $this->assertEquals('mypicture.jpeg', $this->picture->getPath());
     }
 
-    public function testGetAndSetPictureFile()
+    public function testGetAndSetPictureFile(): void
     {
         $pictureFile = new File(__DIR__ . '/../Files/Renault-Clio-5-occasion.jpg', 'Renault-Clio-5-occasion.jpg');
         $this->picture->setPictureFile($pictureFile);
         $this->assertEquals($pictureFile, $this->picture->getPictureFile());
     }
 
-    public function testGetAndSetVehicle()
+    public function testGetAndSetVehicle(): void
     {
         $newVehicle = new Vehicles();
         $this->picture->setVehicle($newVehicle);
