@@ -78,5 +78,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Quality Report
+          name: Test Report
           path: /tmp/tests-results.txt
