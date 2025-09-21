@@ -261,9 +261,9 @@ class Offers
         return $this->startsAt;
     }
 
-    public function setStartsAt(): static
+    public function setStartsAt(\DateTimeImmutable $startsAt): static
     {
-        $this->startsAt = new \DateTimeImmutable();
+        $this->startsAt = $startsAt;
 
         return $this;
     }
@@ -273,9 +273,9 @@ class Offers
         return $this->endsAt;
     }
 
-    public function setEndsAt(): static
+    public function setEndsAt(\DateTimeImmutable $endsAt): static
     {
-        $this->endsAt = new \DateTimeImmutable();
+        $this->endsAt = $endsAt;
 
         return $this;
     }
