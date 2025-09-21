@@ -3,10 +3,10 @@
 namespace App\Tests\Functional\Vehicles;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\User;
 use App\Entity\Documents;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class PostAndGetDocumentsOperationTest extends ApiTestCase
 {
@@ -57,39 +57,37 @@ final class PostAndGetDocumentsOperationTest extends ApiTestCase
 
         $document = new UploadedFile(__DIR__ . '/../../Files/REAC_CDA_V04_FILE_TESTING_DOCUMENT.pdf', 'REAC_CDA_V04_FILE_TESTING_DOCUMENT.pdf');
 
-        $response3 = $client->request('GET', "/api/users/$id/documents", [
+        $response3 = $client->request('GET', "/api/users/{$id}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
-        $client->request('POST', "/api/users/$id/documents", [
+        $client->request('POST', "/api/users/{$id}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-                'Content-Type' => 'multipart/form-data'
+                'Content-Type' => 'multipart/form-data',
             ],
             'extra' => [
                 'files' => [
                     'file' => $document,
-                ]
+                ],
             ],
         ]);
         $this->assertResponseIsSuccessful();
         // $this->assertMatchesResourceItemJsonSchema(Documents::class);
 
-        $response4 = $client->request('GET', "/api/users/$id/documents", [
+        $response4 = $client->request('GET', "/api/users/{$id}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(1, count($response4->toArray()['member']));
-
-
 
     }
 }

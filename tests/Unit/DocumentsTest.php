@@ -2,41 +2,44 @@
 
 namespace App\Tests\Unit;
 
-use App\Entity\User;
 use App\Entity\Applications;
 use App\Entity\Documents;
 use App\Entity\MatchDocuments;
-use Symfony\Component\HttpFoundation\File\File;
+use App\Entity\User;
 use PHPUnit\Framework\TestCase;
-
+use Symfony\Component\HttpFoundation\File\File;
 
 final class DocumentsTest extends TestCase
 {
     private Documents $document;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->document = new Documents();
     }
 
-    public function testGetAndSetPath(){
-        $this->document->setPath("mydocument.pdf");
-        $this->assertEquals("mydocument.pdf", $this->document->getPath());
+    public function testGetAndSetPath()
+    {
+        $this->document->setPath('mydocument.pdf');
+        $this->assertEquals('mydocument.pdf', $this->document->getPath());
     }
 
-    public function testGetAndSetDocumentFile(){
+    public function testGetAndSetDocumentFile()
+    {
         $documentFile = new File(__DIR__ . '/../Files/REAC_CDA_V04_24052023.pdf', 'REAC_CDA_V04_24052023.pdf');
         $this->document->setDocumentFile($documentFile);
         $this->assertEquals($documentFile, $this->document->getDocumentFile());
     }
 
-    public function testGetAndAddApplications(){
+    public function testGetAndAddApplications()
+    {
         $newApplication = new Applications();
         $this->document->addApplication($newApplication);
         $this->assertTrue($this->document->getApplications()->contains($newApplication));
     }
 
-    public function testRemoveApplication(){
+    public function testRemoveApplication()
+    {
         $newApplication = new Applications();
         $this->document->addApplication($newApplication);
         $this->assertTrue($this->document->getApplications()->contains($newApplication));
@@ -44,13 +47,15 @@ final class DocumentsTest extends TestCase
         $this->assertFalse($this->document->getApplications()->contains($newApplication));
     }
 
-    public function testGetAndAddMatchDocuments(){
+    public function testGetAndAddMatchDocuments()
+    {
         $newMatchDocument = new MatchDocuments();
         $this->document->addMatchDocument($newMatchDocument);
         $this->assertTrue($this->document->getMatchDocuments()->contains($newMatchDocument));
     }
 
-    public function testRemoveMatchDocument(){
+    public function testRemoveMatchDocument()
+    {
         $newMatchDocument = new MatchDocuments();
         $this->document->addMatchDocument($newMatchDocument);
         $this->assertTrue($this->document->getMatchDocuments()->contains($newMatchDocument));
@@ -58,7 +63,8 @@ final class DocumentsTest extends TestCase
         $this->assertFalse($this->document->getMatchDocuments()->contains($newMatchDocument));
     }
 
-    public function testGetAndSetUser(){
+    public function testGetAndSetUser()
+    {
         $newUser = new User();
         $this->document->setUser($newUser);
         $this->assertEquals($newUser, $this->document->getUser());

@@ -67,7 +67,7 @@ class ApplicationsRepository extends ServiceEntityRepository
             ]);
 
         return $result->fetchAllAssociative();
-    }    
+    }
 
     public function findAppliersByOfferId($offer_id): array
     {

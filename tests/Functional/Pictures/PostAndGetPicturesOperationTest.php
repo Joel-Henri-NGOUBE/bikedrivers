@@ -4,9 +4,8 @@ namespace App\Tests\Functional\Vehicles;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
-use App\Entity\Vehicles;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class PostAndGetPicturesOperationTest extends ApiTestCase
 {
@@ -58,7 +57,7 @@ final class PostAndGetPicturesOperationTest extends ApiTestCase
 
         $picture = new UploadedFile(__DIR__ . '/../../Files/Renault-Clio-5-occasion_FILE_TESTING_PICTURE.jpg', 'Renault-Clio-5-occasion_FILE_TESTING_PICTURE.jpg');
 
-        $client->request('POST', "/api/users/$id/vehicles", [
+        $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
@@ -66,43 +65,43 @@ final class PostAndGetPicturesOperationTest extends ApiTestCase
                 'type' => 'voiture',
                 'model' => 'C454',
                 'brand' => 'Renault',
-                'purchasedAt' => '2025-08-25'
+                'purchasedAt' => '2025-08-25',
             ],
         ]);
 
-        $response4 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $vehicle_id = $response4->toArray()['member'][0]['id'];
 
-        $response5 = $client->request('GET', "/api/users/$id/vehicles/$vehicle_id/pictures", [
+        $response5 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/pictures", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response5->toArray()['member']));
 
-        $client->request('POST', "/api/users/$id/vehicles/$vehicle_id/pictures", [
+        $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/pictures", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-                'Content-Type' => 'multipart/form-data'
+                'Content-Type' => 'multipart/form-data',
             ],
             'extra' => [
                 'files' => [
                     'file' => $picture,
-                ]
+                ],
             ],
         ]);
 
-        $response6 = $client->request('GET', "/api/users/$id/vehicles/$vehicle_id/pictures", [
+        $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/pictures", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();

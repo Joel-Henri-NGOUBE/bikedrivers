@@ -54,16 +54,16 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
-        $response3 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
-        $client->request('POST', "/api/users/$id/vehicles", [
+        $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
@@ -71,14 +71,14 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
                 'type' => 'voiture',
                 'model' => 'C454',
                 'brand' => 'Renault',
-                'purchasedAt' => '2025-08-25'
+                'purchasedAt' => '2025-08-25',
             ],
         ]);
 
-        $response4 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $json1 = $response4->toArray()['member'];
@@ -87,17 +87,17 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
-        $response5 = $client->request('GET', "/api/users/$id/vehicles/$vehicle_id/offers", [
+        $response5 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $json2 = $response5->toArray()['member'];
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json2));
 
-        $client->request('POST', "/api/users/$id/vehicles/$vehicle_id/offers", [
+        $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
@@ -106,15 +106,15 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
                 'description' => 'The description ',
                 'price' => 10500,
                 'service' => 'SALE',
-                'user' => "/api/users/$id",
-                'vehicle' => "api/vehicles/$vehicle_id"
+                'user' => "/api/users/{$id}",
+                'vehicle' => "api/vehicles/{$vehicle_id}",
             ],
         ]);
 
-        $response6 = $client->request('GET', "/api/users/$id/vehicles/$vehicle_id/offers", [
+        $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $json3 = $response6->toArray()['member'];

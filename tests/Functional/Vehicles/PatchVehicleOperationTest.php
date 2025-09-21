@@ -54,7 +54,7 @@ final class PatchVehicleOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
-        $client->request('POST', "/api/users/$id/vehicles", [
+        $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
@@ -62,14 +62,14 @@ final class PatchVehicleOperationTest extends ApiTestCase
                 'type' => 'voiture',
                 'model' => 'C454',
                 'brand' => 'Renault',
-                'purchasedAt' => '2025-08-25'
+                'purchasedAt' => '2025-08-25',
             ],
         ]);
 
-        $response3 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $vehicles = $response3->toArray()['member'][0];
@@ -78,8 +78,7 @@ final class PatchVehicleOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals('Renault', $vehicles['brand']);
 
-        
-        $client->request('PATCH', "/api/users/$id/vehicles/$vehicleId", [
+        $client->request('PATCH', "/api/users/{$id}/vehicles/{$vehicleId}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
                 'Content-Type' => 'application/merge-patch+json',
@@ -89,10 +88,10 @@ final class PatchVehicleOperationTest extends ApiTestCase
             ],
         ]);
 
-        $response4 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();

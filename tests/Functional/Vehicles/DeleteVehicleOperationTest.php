@@ -54,16 +54,16 @@ final class DeleteVehicleOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
-        $response3 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
-        $client->request('POST', "/api/users/$id/vehicles", [
+        $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
@@ -71,14 +71,14 @@ final class DeleteVehicleOperationTest extends ApiTestCase
                 'type' => 'voiture',
                 'model' => 'C454',
                 'brand' => 'Renault',
-                'purchasedAt' => '2025-08-25'
+                'purchasedAt' => '2025-08-25',
             ],
         ]);
 
-        $response4 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $vehicles = $response4->toArray()['member'];
@@ -88,16 +88,16 @@ final class DeleteVehicleOperationTest extends ApiTestCase
 
         $vehicle_id = $vehicles[0]['id'];
 
-       $client->request('DELETE', "/api/users/$id/vehicles/$vehicle_id", [
+        $client->request('DELETE', "/api/users/{$id}/vehicles/{$vehicle_id}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
-        $response5 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response5 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();

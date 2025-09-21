@@ -2,42 +2,41 @@
 
 namespace App\Tests\Unit;
 
-use App\Entity\User;
-use App\Entity\Vehicles;
-use App\Entity\Offers;
 use App\Entity\MatchDocuments;
+use App\Entity\Offers;
 use App\Entity\RequiredDocuments;
-use App\Entity\Enums\Status;
-use App\Entity\Enums\Service;
 use PHPUnit\Framework\TestCase;
-
 
 final class RequiredDocumentsTest extends TestCase
 {
     private RequiredDocuments $requiredDocument;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->requiredDocument = new RequiredDocuments();
     }
 
-    public function testGetAndSetInformations(){
-        $this->requiredDocument->setInformations("Your document must last less than 3 months");
-        $this->assertEquals("Your document must last less than 3 months", $this->requiredDocument->getInformations());
+    public function testGetAndSetInformations()
+    {
+        $this->requiredDocument->setInformations('Your document must last less than 3 months');
+        $this->assertEquals('Your document must last less than 3 months', $this->requiredDocument->getInformations());
     }
 
-    public function testGetAndSetName(){
-        $this->requiredDocument->setName("Fiche de paie");
-        $this->assertEquals("Fiche de paie", $this->requiredDocument->getName());
+    public function testGetAndSetName()
+    {
+        $this->requiredDocument->setName('Fiche de paie');
+        $this->assertEquals('Fiche de paie', $this->requiredDocument->getName());
     }
 
-    public function testGetAndAddMatchDocuments(){
+    public function testGetAndAddMatchDocuments()
+    {
         $newMatchDocument = new MatchDocuments();
         $this->requiredDocument->addMatchDocument($newMatchDocument);
         $this->assertTrue($this->requiredDocument->getMatchDocuments()->contains($newMatchDocument));
     }
 
-    public function testRemoveMatchDocument(){
+    public function testRemoveMatchDocument()
+    {
         $newMatchDocument = new MatchDocuments();
         $this->requiredDocument->addMatchDocument($newMatchDocument);
         $this->assertTrue($this->requiredDocument->getMatchDocuments()->contains($newMatchDocument));
@@ -45,7 +44,8 @@ final class RequiredDocumentsTest extends TestCase
         $this->assertFalse($this->requiredDocument->getMatchDocuments()->contains($newMatchDocument));
     }
 
-    public function testGetAndSetOffer(){
+    public function testGetAndSetOffer()
+    {
         $newOffer = new Offers();
         $this->requiredDocument->setOffer($newOffer);
         $this->assertEquals($newOffer, $this->requiredDocument->getOffer());

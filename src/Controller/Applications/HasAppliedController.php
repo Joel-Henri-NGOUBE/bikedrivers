@@ -14,12 +14,15 @@ final class HasAppliedController extends AbstractController
     {
         $user = $applicationsRepository->findIfUserHasApplied($offer_id, $user_id);
 
-        if(count($user)){
-            return $this->json(['hasApplied' => true]);
+        if (count($user)) {
+            return $this->json([
+                'hasApplied' => true,
+            ]);
         }
 
-        return $this->json(['hasApplied' => false]);
-
+        return $this->json([
+            'hasApplied' => false,
+        ]);
 
     }
 }

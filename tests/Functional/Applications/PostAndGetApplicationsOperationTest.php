@@ -89,16 +89,16 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $idUser2 = $responseUser2_2->toArray()['id'];
 
-        $response3 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
-        $client->request('POST', "/api/users/$id/vehicles", [
+        $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
@@ -106,14 +106,14 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
                 'type' => 'voiture',
                 'model' => 'C454',
                 'brand' => 'Renault',
-                'purchasedAt' => '2025-08-25'
+                'purchasedAt' => '2025-08-25',
             ],
         ]);
 
-        $response4 = $client->request('GET', "/api/users/$id/vehicles", [
+        $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $json1 = $response4->toArray()['member'];
@@ -122,7 +122,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
-        $client->request('POST', "/api/users/$id/vehicles/$vehicle_id/offers", [
+        $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
@@ -131,113 +131,111 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
                 'description' => 'The description ',
                 'price' => 10500,
                 'service' => 'SALE',
-                'user' => "/api/users/$id",
-                'vehicle' => "api/vehicles/$vehicle_id"
+                'user' => "/api/users/{$id}",
+                'vehicle' => "api/vehicles/{$vehicle_id}",
             ],
         ]);
 
-        $response6 = $client->request('GET', "/api/users/$id/vehicles/$vehicle_id/offers", [
+        $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $json3 = $response6->toArray()['member'];
         // Not offer_id
         $offer_id = $json3[0]['id'];
 
-        $response6 = $client->request('GET', "/api/offers/$offer_id/required_documents", [
+        $response6 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
-        
         $json3 = $response6->toArray()['member'];
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json3));
 
-        $client->request('POST', "/api/offers/$offer_id/required_documents", [
+        $client->request('POST', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
             'json' => [
                 'name' => 'Titre de séjour',
-                'offer'=> "api/offers/$offer_id"
+                'offer' => "api/offers/{$offer_id}",
             ],
         ]);
 
-        $response7 = $client->request('GET', "/api/offers/$offer_id/required_documents", [
+        $response7 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
-        $hasApplied = $client->request('GET', "/api/offers/$offer_id/applications/users/$idUser2/hasApplied", [
+        $hasApplied = $client->request('GET', "/api/offers/{$offer_id}/applications/users/{$idUser2}/hasApplied", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
-            ]
+            ],
         ]);
 
         $this->assertFalse($hasApplied->toArray()['hasApplied']);
 
-        $required_document_id = $response7->toArray()["member"][0]["id"];
+        $required_document_id = $response7->toArray()['member'][0]['id'];
 
         $document = new UploadedFile(__DIR__ . '/../../Files/REAC_CDA_V04_FILE_TESTING_DOCUMENT_2.pdf', 'REAC_CDA_V04_FILE_TESTING_DOCUMENT_2.pdf');
-        
-        $client->request('POST', "/api/users/$idUser2/documents", [
+
+        $client->request('POST', "/api/users/{$idUser2}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
-                'Content-Type' => 'multipart/form-data'
+                'Content-Type' => 'multipart/form-data',
             ],
             'extra' => [
                 'files' => [
                     'file' => $document,
-                ]
+                ],
             ],
         ]);
-        
-        $response8 = $client->request('GET', "/api/users/$idUser2/documents", [
+
+        $response8 = $client->request('GET', "/api/users/{$idUser2}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
-            ]
+            ],
         ]);
 
-        $document_id = $response8->toArray()["member"][0]["id"];
+        $document_id = $response8->toArray()['member'][0]['id'];
 
-        $client->request('POST', "/api/required_documents/$required_document_id/documents/$document_id/match_documents", [
+        $client->request('POST', "/api/required_documents/{$required_document_id}/documents/{$document_id}/match_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
-            ]
+            ],
         ]);
 
         $this->assertResponseIsSuccessful();
 
-        $client->request('POST', "/api/offers/$offer_id/applications", [
+        $client->request('POST', "/api/offers/{$offer_id}/applications", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
             ],
             'json' => [
-                'offer'=> "/api/offers/$offer_id",
-                'documents' => ["/api/documents/$document_id"],
+                'offer' => "/api/offers/{$offer_id}",
+                'documents' => ["/api/documents/{$document_id}"],
             ],
         ]);
         $this->assertResponseIsSuccessful();
 
-
-        $response9 = $client->request('GET', "/api/offers/$offer_id/applications/users/$idUser2/hasApplied", [
+        $response9 = $client->request('GET', "/api/offers/{$offer_id}/applications/users/{$idUser2}/hasApplied", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
-            ]
+            ],
         ]);
 
         $this->assertTrue($response9->toArray()['hasApplied']);
 
-        $response10 = $client->request('GET', "/api/offers/$offer_id/applications/appliers", [
+        $response10 = $client->request('GET', "/api/offers/{$offer_id}/applications/appliers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
-            ]
+            ],
         ]);
 
         $this->assertEquals(1, count($response10->toArray()));
