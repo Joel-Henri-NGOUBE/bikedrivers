@@ -1,0 +1,64 @@
+name: BikeDrivers Backend Quality assurance
+
+on:
+  push:
+    branches: [ "main", "testAndQuality-2" ]
+  pull_request:
+    branches: [ "main", "testAndQuality-2" ]
+
+jobs:
+  quality:
+    name: Run quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
+          coverage: none
+        
+      # Defining the cache dir in the environment variables of the runner
+      - name: Set Up Cache
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      # Defining the cache dir access options
+      - name: Caching Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php8.3-composer-{{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php8.3-composer-latest-
+
+      - name: Update composer   
+        run: composer self-update
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+      # Verifying the code based on the coding standards PHP Code Sniffer and PHP CS Fixer
+      - name: Easy Coding Standard
+        run: ./vendor/bin/ecs check >> /tmp/assurance-report.txt
+
+      # Verifying that the YAML syntaxes of config, .github directories and docker-compose file have the right syntaxes
+      - name: Lint of YAML
+        run: php bin/console lint:yaml config .github docker-compose.yaml >> /tmp/assurance-report.txt
+
+      # Verifying that the code standards follows syntax code requirements based on Phpstan
+      - name: PHPStan
+        run: ./vendor/bin/phpstan analyse --memory-limit=-1 >> /tmp/assurance-report.txt
+
+      # Verifying that the code standards follows syntax code requirements based on Rector
+      - name: Rector
+        run: ./vendor/bin/rector --dry-run >> /tmp/assurance-report.txt
+
+      # Retrieving the artifact
+      - name: Upload quality report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Quality Report
+          path: /tmp/assurance-report.txt

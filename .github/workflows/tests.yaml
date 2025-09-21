@@ -1,4 +1,4 @@
-name: API Platform Service Tests
+name: BikeDrivers Backend Tests
 
 on:
   push:
@@ -32,6 +32,18 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
           coverage: none
 
+      - name: Set Up Cache
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      # Defining the cache dir access options
+      - name: Caching Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php8.3-composer-{{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php8.3-composer-latest-
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
@@ -57,7 +69,14 @@ jobs:
 
       # Executing tests
       - name: Run PHPUnit tests
-        run: ./vendor/bin/phpunit tests
+        run: ./vendor/bin/phpunit tests >> /tmp/tests-results.txt
         env:
           KERNEL_CLASS: App\Kernel
           APP_ENV: test
+
+      - name: Upload quality report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Quality Report
+          path: /tmp/tests-results.txt
