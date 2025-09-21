@@ -46,14 +46,6 @@ jobs:
       - name: Generate keypair
         run: php bin/console lexik:jwt:generate-keypair
 
-      - name: echo
-        run: |
-              echo "------"
-              echo "$JWT_PASSPHRASE"
-              echo "------"
-              echo ${{ env.JWT_PASSPHRASE }}
-              echo "------"
-
       - name: Create database
         run: php bin/console doctrine:database:create --env=test
 
