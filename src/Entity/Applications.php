@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
     operations: [new Post(read: false)],
-    security: "is_granted('ROLE_ADMIN')"
+    // security: "is_granted('ROLE_ADMIN')"
     // controller: applicationsController::class
 )]
 
