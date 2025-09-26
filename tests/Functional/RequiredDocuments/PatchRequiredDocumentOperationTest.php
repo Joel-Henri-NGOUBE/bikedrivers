@@ -54,6 +54,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting his vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -63,6 +64,8 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+
+        // Adding a new vehicle to his collection
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -75,6 +78,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Requesting the users' vehicles
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -87,6 +91,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Creating an offer for that vehicle
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -101,6 +106,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting the vehicles' offers
         $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -111,6 +117,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
 
         $offer_id = $json3[0]['id'];
 
+        // Adding a required document to the offer
         $client->request('POST', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -120,7 +127,8 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
                 'offer' => "api/offers/{$offer_id}",
             ],
         ]);
-
+        
+        // Getting the required documents
         $response7 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -130,6 +138,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
         $json4 = $response7->toArray()['member'];
         $required_document_id = $json4[0]['id'];
 
+        // Setting a required document
         $client->request('PATCH', "/api/offers/{$offer_id}/required_documents/{$required_document_id}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -149,6 +158,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
         $json5 = $response8->toArray()['member'];
 
         $this->assertResponseIsSuccessful();
+        // Asserting the change has been registered
         $this->assertEquals('New information', $json5[0]['informations']);
 
     }

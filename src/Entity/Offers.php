@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OffersRepository::class)]
-// Defines the route that adds an operation
+// Defines the route that adds an offer
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers',
     operations: [new Post(read: false)],
@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     // controller: OffersController::class
 )]
 
-// Defines the route that gets an operation
+// Defines the route that gets all users' offers
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers',
     uriVariables: [
@@ -40,18 +40,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
+// Defines the routes that allow the user to acces his offers elements
 #[ApiResource(
     uriTemplate: 'users/{user_id}/offers/elements',
     operations: [new GetCollection()],
     controller: OffersControllers\SelfOffersElementsController::class
 )]
 
+// Defines the routes that allow the user to acces the offers he applied to
 #[ApiResource(
     uriTemplate: 'users/{user_id}/offers/applied',
     operations: [new GetCollection()],
     controller: OffersControllers\AppliedOffersController::class
 )]
 
+// Defines the routes that allow the user to modify an offer
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers/{offer_id}',
     uriVariables: [

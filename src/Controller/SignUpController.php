@@ -14,7 +14,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class SignUpController extends AbstractController
 {
     #[Route('signup', name: 'signup', methods: ['POST'])]
-    public function signup(Request $request, EntityManagerInterface $em, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    public function signup(
+        Request $request, 
+        EntityManagerInterface $em, 
+        UserRepository $userRepository, 
+        UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $payload = $request->getPayload()->all();
 

@@ -54,6 +54,7 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting the users' vehicles 
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -63,6 +64,7 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Adding him a vehicle
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -75,6 +77,7 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting his vehicles list
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -87,6 +90,7 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Getting the offers of the vehicle
         $response5 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -97,6 +101,7 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json2));
 
+        // Creating a new offer
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -119,6 +124,7 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
 
         $json3 = $response6->toArray()['member'];
         $this->assertResponseIsSuccessful();
+        // Asserting it has been added after having requesting all the offers
         $this->assertEquals(1, count($json3));
 
     }

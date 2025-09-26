@@ -54,6 +54,7 @@ final class DeleteVehicleOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting his vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -63,6 +64,7 @@ final class DeleteVehicleOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Adding a new vehicle to his list of vehicles
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -75,6 +77,7 @@ final class DeleteVehicleOperationTest extends ApiTestCase
             ],
         ]);
 
+        
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -84,10 +87,12 @@ final class DeleteVehicleOperationTest extends ApiTestCase
         $vehicles = $response4->toArray()['member'];
 
         $this->assertResponseIsSuccessful();
+        // Asserting a new vehicle has been created
         $this->assertEquals(1, count($vehicles));
 
         $vehicle_id = $vehicles[0]['id'];
 
+        // Delete the previously created vehicle
         $client->request('DELETE', "/api/users/{$id}/vehicles/{$vehicle_id}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -101,6 +106,7 @@ final class DeleteVehicleOperationTest extends ApiTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
+        // Asserting it has been deleted by compoarison of counts
         $this->assertEquals(0, count($response5->toArray()['member']));
 
     }

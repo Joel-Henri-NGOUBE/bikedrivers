@@ -19,6 +19,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: DocumentsRepository::class)]
 
 #[Vich\Uploadable]
+// Defines the route that associates a new document to a user
 #[ApiResource(
     uriTemplate: 'users/{user_id}/documents',
     operations: [new Post()],
@@ -34,6 +35,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     operations: [new GetCollection()]
 )]
 
+// Defines the routes that get some documents elements
 #[ApiResource(
     uriTemplate: 'applications/{application_id}/documents/elements',
     operations: [new GetCollection()],
@@ -41,12 +43,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
+// defines the route that get some documents elements of a transfered document
 #[ApiResource(
     uriTemplate: 'offers/{offer_id}/users/{user_id}/documents/elements',
     operations: [new GetCollection()],
     controller: DocumentsControllers\TransferedDocumentsElementsController::class
 )]
 
+// Defines the route that deletes a user document
 #[ApiResource(
     uriTemplate: '/users/{user_id}/documents/{document_id}',
     uriVariables: [

@@ -17,6 +17,7 @@ final class MatchDocumentsController extends AbstractController
         $payload = $request->getPayload()->all();
         $newMatchDocument = new MatchDocuments();
         $requiredDocumentRepository->findOneByIdField($required_document_id)->addMatchDocument($newMatchDocument);
+        // Linking the document with the requiredDocument
         $documentsRepository->findOneByIdField($document_id)->addMatchDocument($newMatchDocument);
         $em->persist($newMatchDocument);
         $em->flush();

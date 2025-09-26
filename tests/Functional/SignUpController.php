@@ -12,6 +12,7 @@ final class SignUpControllerTest extends ApiTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
+        // Signing the user up
         $response = $client->request('POST', '/signup', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -23,7 +24,8 @@ final class SignUpControllerTest extends ApiTestCase
                 'password' => 'password',
             ],
         ]);
-
+        
+        // Log him in
         self::assertResponseIsSuccessful();
 
         $response = $client->request('POST', '/api/login_check', [

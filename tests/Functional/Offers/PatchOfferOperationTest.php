@@ -54,6 +54,7 @@ final class PatchOfferOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting the vehciles list of the user
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -63,6 +64,7 @@ final class PatchOfferOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Creating a new vehicle
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -75,6 +77,7 @@ final class PatchOfferOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Fetching the vehicles list
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -85,6 +88,7 @@ final class PatchOfferOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Creating an offer for th ecreated vehicle
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -99,6 +103,7 @@ final class PatchOfferOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting the vehicles' offers
         $response5 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -107,6 +112,7 @@ final class PatchOfferOperationTest extends ApiTestCase
 
         $offer_id = $response5->toArray()['member'][0]['id'];
 
+        // Setting the offer created
         $client->request('PATCH', "/api/users/{$id}/vehicles/{$vehicle_id}/offers/{$offer_id}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -117,6 +123,7 @@ final class PatchOfferOperationTest extends ApiTestCase
             ],
         ]);
 
+
         $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -125,7 +132,7 @@ final class PatchOfferOperationTest extends ApiTestCase
 
         $json3 = $response6->toArray()['member'];
         $this->assertResponseIsSuccessful();
-        // Here
+        // Asserting the data has been updated after requesting the offer
         $this->assertEquals(9000, $json3[0]['price']);
 
     }

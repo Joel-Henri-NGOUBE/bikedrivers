@@ -31,6 +31,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     // controller: applicationsController::class
 )]
 
+// Defines the route that retrieves the applications of an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications',
     uriVariables: [
@@ -40,6 +41,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [new GetCollection()]
 )]
 
+// Defines the route that gets all the appliers of an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/appliers',
     operations: [new GetCollection()],
@@ -47,6 +49,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     controller: AppliersController::class,
 )]
 
+// Defines the route that determines if the user has applied or not to the offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/users/{user_id}/hasApplied',
     operations: [new Get()],

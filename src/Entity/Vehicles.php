@@ -50,7 +50,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
-// Defines the route that sets an operation
+// Defines the route that sets a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}',
     uriVariables: [
@@ -61,7 +61,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
-// Defines the route that deletes an operation
+// Defines the route that deletes a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}',
     uriVariables: [

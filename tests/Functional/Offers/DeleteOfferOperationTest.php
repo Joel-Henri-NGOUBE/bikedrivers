@@ -54,6 +54,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting his vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -62,6 +63,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
 
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Adding a vehicle
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -74,6 +76,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting the ussers' vehicles
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -86,6 +89,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Getting the vehicles' offers
         $response5 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -96,6 +100,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json2));
 
+        // Creating a new offer
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -110,6 +115,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Creating an offer for the vehicle
         $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -121,6 +127,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
         $this->assertEquals(1, count($json3));
 
         $offer_id = $json3[0]['id'];
+        // Deleting the offer
         $client->request('DELETE', "/api/offers/{$offer_id}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -135,6 +142,7 @@ final class DeleteOfferOperationTest extends ApiTestCase
 
         $json4 = $response7->toArray()['member'];
         $this->assertResponseIsSuccessful();
+        // Asserting the offer has been deleted
         $this->assertEquals(0, count($json4));
 
     }

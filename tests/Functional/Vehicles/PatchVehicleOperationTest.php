@@ -53,7 +53,7 @@ final class PatchVehicleOperationTest extends ApiTestCase
         ]);
 
         $id = $response2->toArray()['id'];
-
+        // Adding a vehicle to him
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -65,7 +65,7 @@ final class PatchVehicleOperationTest extends ApiTestCase
                 'purchasedAt' => '2025-08-25',
             ],
         ]);
-
+        // Getting his vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -78,6 +78,7 @@ final class PatchVehicleOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals('Renault', $vehicles['brand']);
 
+        // Modifying the created vehicle
         $client->request('PATCH', "/api/users/{$id}/vehicles/{$vehicleId}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -88,6 +89,7 @@ final class PatchVehicleOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting another time hsi vehicles
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -95,6 +97,7 @@ final class PatchVehicleOperationTest extends ApiTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
+        // Comparing the changed value to see if there was a modification
         $this->assertEquals('Hyundai', $response4->toArray()['member'][0]['brand']);
 
     }

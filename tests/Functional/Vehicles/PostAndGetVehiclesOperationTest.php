@@ -53,7 +53,7 @@ final class PostAndGetVehiclesOperationTest extends ApiTestCase
         ]);
 
         $id = $response2->toArray()['id'];
-
+        // Getting his vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -62,7 +62,8 @@ final class PostAndGetVehiclesOperationTest extends ApiTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
-
+        
+        // Adding a new vehicle to him
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -75,6 +76,7 @@ final class PostAndGetVehiclesOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting his vehicles to compare the counts
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],

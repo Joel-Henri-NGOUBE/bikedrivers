@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
     controller: MatchDocumentsController::class
 )]
 
+// Defines the route that retrieves a line of required document linked with a document
 #[ApiResource(
     uriTemplate: '/required_documents/{required_document_id}/documents/{document_id}/match_documents/{match_document_id}',
     uriVariables: [
@@ -32,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
     operations: [new Get()]
 )]
 
-// Defines the route that sets an operation
+// Defines the route that sets a line of required document linked with a document
 #[ApiResource(
     uriTemplate: '/required_documents/{required_document_id}/documents/{document_id}/match_documents/{match_document_id}',
     uriVariables: [
@@ -43,7 +44,7 @@ use Doctrine\ORM\Mapping as ORM;
     operations: [new Patch()]
 )]
 
-// Defines the route that deletes an operation
+// Defines the route that deletes a line of required document linked with a document
 #[ApiResource(
     uriTemplate: '/required_documents/{required_document_id}/documents/{document_id}/match_documents/{match_document_id}',
     uriVariables: [

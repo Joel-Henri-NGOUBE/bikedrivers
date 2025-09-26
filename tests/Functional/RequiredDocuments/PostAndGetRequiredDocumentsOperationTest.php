@@ -54,6 +54,7 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting his vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -63,6 +64,7 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Adding him a vehicle
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -74,6 +76,7 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
                 'purchasedAt' => '2025-08-25',
             ],
         ]);
+
 
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
@@ -87,6 +90,7 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Adding an offer to the vehicle
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -101,6 +105,7 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting the offers of the vehicle
         $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -108,9 +113,10 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
         ]);
 
         $json3 = $response6->toArray()['member'];
-        // Not offer_id
+
         $offer_id = $json3[0]['id'];
 
+        // Verifying there isn't any required document yet
         $response6 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -122,6 +128,7 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json3));
 
+        // Adding a required document
         $client->request('POST', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -137,9 +144,10 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
         ]);
-
+        
         $json4 = $response7->toArray()['member'];
-
+        
+        // Asserting it has been created
         $this->assertResponseIsSuccessful();
         $this->assertEquals(1, count($json4));
 

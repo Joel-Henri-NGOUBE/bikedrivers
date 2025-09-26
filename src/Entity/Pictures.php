@@ -16,6 +16,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: PicturesRepository::class)]
 #[Vich\Uploadable]
+
+// Defines the route that adds a picture to a vehicle
 #[ApiResource(
     uriTemplate: 'users/{user_id}/vehicles/{vehicle_id}/pictures',
     operations: [new Post()],
@@ -23,7 +25,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
-// Defines the route that gets an operation
+// Defines the route that gets all pictures of a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/pictures',
     uriVariables: [
@@ -34,6 +36,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
+// Defines the route that gets all pictures of a vehicle
 #[ApiResource(
     uriTemplate: '/vehicles/{vehicle_id}/pictures',
     uriVariables: [
@@ -43,6 +46,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     operations: [new GetCollection()]
 )]
 
+// Defines the route that delete a vehicle picture
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/pictures/{picture_id}',
     uriVariables: [

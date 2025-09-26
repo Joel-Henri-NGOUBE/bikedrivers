@@ -54,6 +54,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting his vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -63,6 +64,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Adding a new vehicle to his list
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -75,6 +77,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Requesting his vehicles list
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -87,6 +90,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Creating an offer for the created vehicle
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -101,6 +105,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
             ],
         ]);
 
+
         $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -111,6 +116,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
 
         $offer_id = $json3[0]['id'];
 
+        // Associating a required document to this offer
         $client->request('POST', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -121,6 +127,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting its required documents list
         $response7 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -130,16 +137,19 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
         $json4 = $response7->toArray()['member'];
 
         $this->assertResponseIsSuccessful();
+        // Asserting an offer has been
         $this->assertEquals(1, count($json4));
 
         $required_document_id = $json4[0]['id'];
 
+        // Deleting a required documents
         $client->request('DELETE', "/api/offers/{$offer_id}/required_documents/{$required_document_id}", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
         ]);
 
+        // Getting the required documents of the offer
         $response8 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -149,6 +159,7 @@ final class DeleteRequiredDocumentOperationTest extends ApiTestCase
         $json5 = $response8->toArray()['member'];
 
         $this->assertResponseIsSuccessful();
+        // Asserting there is no more existing required document for that offer
         $this->assertEquals(0, count($json5));
 
     }

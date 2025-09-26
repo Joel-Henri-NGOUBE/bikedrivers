@@ -57,6 +57,7 @@ final class PostAndGetDocumentsOperationTest extends ApiTestCase
 
         $document = new UploadedFile(__DIR__ . '/../../Files/REAC_CDA_V04_FILE_TESTING_DOCUMENT.pdf', 'REAC_CDA_V04_FILE_TESTING_DOCUMENT.pdf');
 
+        // Getting his documents
         $response3 = $client->request('GET', "/api/users/{$id}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -66,6 +67,7 @@ final class PostAndGetDocumentsOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Uploading a new document for the user
         $client->request('POST', "/api/users/{$id}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -78,7 +80,6 @@ final class PostAndGetDocumentsOperationTest extends ApiTestCase
             ],
         ]);
         $this->assertResponseIsSuccessful();
-        // $this->assertMatchesResourceItemJsonSchema(Documents::class);
 
         $response4 = $client->request('GET', "/api/users/{$id}/documents", [
             'headers' => [
@@ -87,6 +88,7 @@ final class PostAndGetDocumentsOperationTest extends ApiTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
+        // Asserting the document has been added
         $this->assertEquals(1, count($response4->toArray()['member']));
 
     }

@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RequiredDocumentsRepository::class)]
 
+// Defines the route that adds a required document to an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/required_documents',
     uriVariables: [
@@ -27,6 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
+// Defines the route that gets all required documents to an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/required_documents',
     uriVariables: [
@@ -35,7 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [new GetCollection()],
 )]
 
-// Defines the route that gets an operation
+// Defines the route that gets a required document to an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}',
     uriVariables: [
@@ -45,7 +47,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [new Get()]
 )]
 
-// Defines the route that sets an operation
+// Defines the route that changes a required document to an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}',
     uriVariables: [
@@ -56,7 +58,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     security: "is_granted('ROLE_ADMIN')"
 )]
 
-// Defines the route that deletes an operation
+// Defines the route that deletes a required document to an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/required_documents/{required_document_id}',
     uriVariables: [

@@ -54,6 +54,7 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
+        // Getting the users' vehciles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -62,6 +63,7 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
 
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Adding a vehicle
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -74,6 +76,7 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Requesting his vehicles' list
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -86,6 +89,7 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Getting the vehicles' offers
         $response5 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -96,6 +100,7 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json2));
 
+        // Adding 4 offers to the vehicle
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -109,6 +114,7 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
                 'vehicle' => "api/vehicles/{$vehicle_id}",
             ],
         ]);
+
 
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
@@ -160,6 +166,7 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
 
         $json3 = $response6->toArray()['member'];
         $this->assertResponseIsSuccessful();
+        // Asserting the 4 have been created
         $this->assertEquals(4, count($json3));
 
     }

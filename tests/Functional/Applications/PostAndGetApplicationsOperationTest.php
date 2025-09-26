@@ -64,6 +64,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Authenticating the second user
         $responseUser2_1 = $client->request('POST', '/api/login_check', [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -75,7 +76,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
         ]);
         $jsonUser2 = $responseUser2_1->toArray();
 
-        // Getting his id to assert he has been created
+        // Getting his id to assert he has been logged in
         $responseUser2_2 = $client->request('POST', '/api/id', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
@@ -89,6 +90,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $idUser2 = $responseUser2_2->toArray()['id'];
 
+        // Requesting the Admin vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -98,6 +100,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
+        // Adding a new vehicle to the list
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -110,6 +113,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting the vehicles' lsit of the Admin
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -122,6 +126,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $vehicle_id = $json1[0]['id'];
 
+        // Creating an offer for that vehicle
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -143,20 +148,22 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
         ]);
 
         $json3 = $response6->toArray()['member'];
-        // Not offer_id
+
         $offer_id = $json3[0]['id'];
 
+        // Getting the required documents associated to the offer
         $response6 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
         ]);
-
+        
         $json3 = $response6->toArray()['member'];
-
+        
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json3));
-
+        
+        // Adding a required document for that offer
         $client->request('POST', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -167,12 +174,14 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Adding the added required document
         $response7 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
         ]);
 
+        // Finding if the second user has applied
         $hasApplied = $client->request('GET', "/api/offers/{$offer_id}/applications/users/{$idUser2}/hasApplied", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
@@ -185,6 +194,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $document = new UploadedFile(__DIR__ . '/../../Files/REAC_CDA_V04_FILE_TESTING_DOCUMENT_2.pdf', 'REAC_CDA_V04_FILE_TESTING_DOCUMENT_2.pdf');
 
+        // Uploading a new document for the second user
         $client->request('POST', "/api/users/{$idUser2}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
@@ -197,6 +207,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
             ],
         ]);
 
+        // Getting his list of documents
         $response8 = $client->request('GET', "/api/users/{$idUser2}/documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
@@ -205,6 +216,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $document_id = $response8->toArray()['member'][0]['id'];
 
+        // Associating the document with a required document
         $client->request('POST', "/api/required_documents/{$required_document_id}/documents/{$document_id}/match_documents", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
@@ -213,6 +225,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $this->assertResponseIsSuccessful();
 
+        // Creating an application for the offer
         $client->request('POST', "/api/offers/{$offer_id}/applications", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
@@ -224,6 +237,7 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
         ]);
         $this->assertResponseIsSuccessful();
 
+        // Finding if the user has applied
         $response9 = $client->request('GET', "/api/offers/{$offer_id}/applications/users/{$idUser2}/hasApplied", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $jsonUser2['token'],
@@ -232,12 +246,14 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
 
         $this->assertTrue($response9->toArray()['hasApplied']);
 
+        // Finding the list of appliers to the previously set offer
         $response10 = $client->request('GET', "/api/offers/{$offer_id}/applications/appliers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
         ]);
 
+        // Asserting ther is one applicant
         $this->assertEquals(1, count($response10->toArray()));
     }
 }
