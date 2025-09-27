@@ -91,15 +91,19 @@ class Vehicles
     private ?int $id = null;
 
     #[ORM\Column(length: 50, nullable: false)]
+    #[Assert\Type('string')]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $type = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $model = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $brand = null;
 
     #[ORM\Column(nullable: false)]

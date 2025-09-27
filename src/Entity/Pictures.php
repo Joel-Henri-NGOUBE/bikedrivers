@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PicturesRepository::class)]
 #[Vich\Uploadable]
@@ -76,6 +77,7 @@ class Pictures
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Type('string')]
     private ?string $path = null;
 
     #[Vich\UploadableField(mapping: 'pictures', fileNameProperty: 'path')]

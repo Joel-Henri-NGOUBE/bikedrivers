@@ -89,6 +89,7 @@ class RequiredDocuments
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $informations = null;
 
     #[ORM\Column(nullable: false)]
@@ -106,6 +107,7 @@ class RequiredDocuments
 
     #[ORM\Column(length: 255, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $name = null;
 
     /**

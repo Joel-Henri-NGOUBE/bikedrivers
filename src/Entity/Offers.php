@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OffersRepository::class)]
 // Defines the route that adds an offer
@@ -127,10 +128,12 @@ class Offers
 
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('integer')]
     private ?string $id_taker = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $description = null;
 
     #[ORM\Column(enumType: Status::class, nullable: true, options: [
@@ -174,9 +177,11 @@ class Offers
     private Collection $requiredDocuments;
 
     #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\Type('string')]
     private ?string $title = null;
 
     #[ORM\Column(nullable: false)]
+    #[Assert\Type('float')]
     private ?float $price = null;
 
     #[ORM\Column(enumType: Service::class, nullable: false, options: [

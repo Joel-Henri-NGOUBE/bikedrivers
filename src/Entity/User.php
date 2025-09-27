@@ -33,6 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Email]
     private ?string $mail = null;
 
     /**
@@ -47,14 +48,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(nullable: false)]
     #[Groups(['read'])]
+    #[Assert\Type('string')]
     private ?string $password = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: false)]
