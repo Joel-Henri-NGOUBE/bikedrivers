@@ -1,7 +1,6 @@
 
 ###> symfony/framework-bundle ###
 /.env.local
-/.env.test
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
@@ -12,6 +11,10 @@
 /fixtures
 /migrations/*.php
 /zbackup
+*/backup/
+/backup/
+!*/backup/*.yaml
+# !*/backup/.gitignore
 index.html
 ###< symfony/framework-bundle ###
 
