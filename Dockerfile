@@ -17,6 +17,6 @@ RUN chmod +x commands.sh
 
 RUN composer install
 
-CMD ["./commands.sh"]
+CMD ["./commands-deploy.sh"]
 
 EXPOSE 8000
