@@ -12,6 +12,10 @@
 /fixtures
 /migrations/*.php
 /zbackup
+*/backup/
+/backup/
+!*/backup/*.yaml
+# !*/backup/.gitignore
 index.html
 ###< symfony/framework-bundle ###
 

@@ -29,6 +29,7 @@ services:
       - mysql
     volumes:
       - ./backup/migrations:/bikedrivers/migrations/
+      - ./backup/media:/bikedrivers/public/media/
 
       # Lancer le frontend
   bikedrivers-frontend:
