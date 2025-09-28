@@ -1,10 +1,13 @@
 name: BikeDrivers Backend Audit
 
 on:
+  workflow_call:
   push:
-    branches: [ "main" ]
+    branches-ignore:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches-ignore:
+      - main
 
 jobs:
   audit:
