@@ -50,6 +50,10 @@ jobs:
       - name: Copy .env
         run: cp .env .env.test
 
+      # Defining the database URL in the .env file
+      - name: Update DATABASE_URL env var
+        run: sed -i 's/DATABASE_URL=.*/DATABASE_URL="mysql:\/\/root:@127.0.0.1:3306\/bikedrivers_api?serverVersion=8.0.43"/' .env.test
+
       # Generate tokens keypair
       - name: Generate keypair
         run: php bin/console lexik:jwt:generate-keypair
