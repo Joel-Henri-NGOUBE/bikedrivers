@@ -9,6 +9,9 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use App\Controller\PicturesController;
 use App\Repository\PicturesRepository;
+use App\State\DenyNotOwnerActionsOnCollectionProvider;
+use App\State\DenyNotOwnerActionsOnItemProvider;
+use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -34,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
     ],
     operations: [new GetCollection()],
+    provider: DenyNotOwnerActionsOnCollectionProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 
@@ -56,6 +60,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'picture_id' => new Link(fromClass: Pictures::class),
     ],
     operations: [new Delete()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 
@@ -81,6 +86,15 @@ class Pictures
     private ?string $path = null;
 
     #[Vich\UploadableField(mapping: 'pictures', fileNameProperty: 'path')]
+    #[Assert\Image(
+        maxSize: '5M'
+    )]
+    #[Assert\Image(
+        maxSize: '5M'
+    )]
+    #[Assert\Image(
+        maxSize: '5M'
+    )]
     private ?File $pictureFile = null;
 
     #[ORM\Column(nullable: false)]

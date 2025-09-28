@@ -10,11 +10,13 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\RequiredDocumentsRepository;
+use App\State\DenyNotOwnerActionsProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RequiredDocumentsRepository::class)]
 
@@ -25,6 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
     operations: [new Post(read: false)],
+    // processor: DenyNotOwnerActionsProcessor::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 

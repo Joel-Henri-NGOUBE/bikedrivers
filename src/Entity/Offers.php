@@ -14,6 +14,10 @@ use App\Controller\OffersController;
 use App\Entity\Enums\Service;
 use App\Entity\Enums\Status;
 use App\Repository\OffersRepository;
+use App\State\DenyNotOwnerActionsOnCollectionProvider;
+use App\State\DenyNotOwnerActionsOnItemProvider;
+use App\State\DenyNotOwnerActionsProcessor;
+use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -26,7 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers',
     operations: [new Post(read: false)],
-    security: "is_granted('ROLE_ADMIN')"
+    security: "is_granted('ROLE_ADMIN')",
+    // processor: DenyNotOwnerActionsProcessor::class
     // controller: OffersController::class
 )]
 
@@ -38,6 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
     ],
     operations: [new GetCollection()],
+    provider: DenyNotOwnerActionsOnCollectionProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 
@@ -64,6 +70,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'offer_id' => new Link(fromClass: Offers::class),
     ],
     operations: [new Patch()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 

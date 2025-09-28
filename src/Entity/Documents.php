@@ -9,6 +9,9 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Documents as DocumentsControllers;
 use App\Repository\DocumentsRepository;
+use App\State\DenyNotOwnerActionsOnCollectionProvider;
+use App\State\DenyNotOwnerActionsOnItemProvider;
+use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -33,15 +36,15 @@ use Symfony\Component\Validator\Constraints as Assert;
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
-    operations: [new GetCollection()]
-)]
+    operations: [new GetCollection()],
+    provider: DenyNotOwnerActionsOnCollectionProvider::class,
 
+)]
 // Defines the routes that get some documents elements
 #[ApiResource(
     uriTemplate: 'applications/{application_id}/documents/elements',
     operations: [new GetCollection()],
-    controller: DocumentsControllers\DocumentsElementsController::class,
-    security: "is_granted('ROLE_ADMIN')"
+    controller: DocumentsControllers\DocumentsElementsController::class
 )]
 
 // defines the route that get some documents elements of a transfered document
@@ -58,6 +61,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'document_id' => new Link(fromClass: Documents::class),
     ],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
     operations: [new Delete()]
 )]
 
@@ -84,6 +88,9 @@ class Documents
     private ?string $path = null;
 
     #[Vich\UploadableField(mapping: 'documents', fileNameProperty: 'path')]
+    #[Assert\File(
+        maxSize: '5M'
+    )]
     private ?File $documentFile = null;
 
     #[ORM\Column(nullable: false)]

@@ -11,10 +11,15 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\VehiclesController;
 use App\Repository\VehiclesRepository;
+use App\State\DenyNotOwnerActionsOnCollectionProvider;
+use App\State\DenyNotOwnerActionsOnItemProvider;
+use App\State\DenyNotOwnerActionsProcessor;
+use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VehiclesRepository::class)]
 // Defines the route that adds a vehicle
@@ -23,10 +28,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
-    operations: [new Post(
-    )],
+    operations: [new Post()],
     controller: VehiclesController::class,
-    security: "is_granted('ROLE_ADMIN')"
+    security: "is_granted('ROLE_ADMIN')",
 )]
 
 // Defines the route that gets all users' vehicles
@@ -36,6 +40,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
     operations: [new GetCollection()],
+    provider: DenyNotOwnerActionsOnCollectionProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 
@@ -47,6 +52,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
     operations: [new Get()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 
@@ -58,6 +64,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
     operations: [new Patch()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 
@@ -69,6 +76,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
     operations: [new Delete()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
     security: "is_granted('ROLE_ADMIN')"
 )]
 

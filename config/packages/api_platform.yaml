@@ -3,7 +3,7 @@ api_platform:
         api_keys:
             JWT:
                 name: Authorization
-                type: header 
+                type: header
     formats:
         jsonld:   ['application/ld+json']
         json:     ['application/json']

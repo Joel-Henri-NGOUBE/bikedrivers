@@ -13,6 +13,7 @@ use App\Controller\Applications\AppliersController;
 use App\Controller\Applications\HasAppliedController;
 use App\Entity\Enums\ApplicationState;
 use App\Repository\ApplicationsRepository;
+use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,11 +29,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
     operations: [new Post(read: false)],
-    // security: "is_granted('ROLE_ADMIN')"
-    // controller: applicationsController::class
-)]
-
-// Defines the route that retrieves the applications of an offer
+    )]
+    
+    // Defines the route that retrieves the applications of an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications',
     uriVariables: [
