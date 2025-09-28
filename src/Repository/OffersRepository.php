@@ -41,7 +41,7 @@ class OffersRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findOneByIdField($id): ?Offers
+    public function findOneByIdField(int | string $id): ?Offers
     {
         return $this->createQueryBuilder('o')
             ->andWhere('o.id = :id')
@@ -49,6 +49,58 @@ class OffersRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function findOffersElementsByUserId(int | string $user_id): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $query = '
+            SELECT o.title title, v.type, v.model model, v.brand brand, o.id id_offer, o.status
+            FROM vehicles v 
+            JOIN offers o 
+            ON v.id = o.vehicle_id
+            AND v.user_id = :user_id
+        ';
+
+        $result = $connection
+            ->executeQuery($query, [
+                'user_id' => $user_id,
+            ]);
+
+        return $result->fetchAllAssociative();
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function findAppliedOffersByUserId(int | string $user_id): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $query = '
+            SELECT DISTINCT o.title title, v.model model, v.brand brand, o.id id_offer, o.status, a.state, a.created_at application_date 
+            FROM users u
+            JOIN documents d
+            ON u.id = d.user_id
+            JOIN applications_documents ad
+            ON d.id = ad.documents_id
+            JOIN applications a
+            ON ad.applications_id = a.id
+            JOIN offers o
+            ON a.offer_id = o.id
+            JOIN vehicles v
+            ON o.vehicle_id = v.id
+            AND d.user_id = :user_id
+        ';
+
+        $result = $connection
+            ->executeQuery($query, [
+                'user_id' => $user_id,
+            ]);
+
+        return $result->fetchAllAssociative();
     }
 
     // public function findOneByIdField($id, $vehicle_id, $user_id): ?Vehicles

@@ -4,19 +4,20 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class SignUpController extends AbstractController
 {
     #[Route('signup', name: 'signup', methods: ['POST'])]
-    public function signup(Request $request, EntityManagerInterface $em, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse
-    {
+    public function signup(
+        Request $request,
+        UserRepository $userRepository,
+        UserPasswordHasherInterface $passwordHasher
+    ): JsonResponse {
         $payload = $request->getPayload()->all();
 
         // Determines if the user exists
@@ -46,24 +47,15 @@ class SignUpController extends AbstractController
             'code' => '200',
             'message' => 'User account created successfully',
         ])
-        ->setStatusCode(200);
+            ->setStatusCode(200);
     }
 
-    #[Route('filetesting', name: 'filetesting', methods: ['POST'])]
-    public function test(Request $request, EntityManagerInterface $em, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse{
-        // dd([
-        //     "return" => "return"
-        // ]);
-        // dd($request);
-        // return $this->json([
-        //     "return" => "return"
-        // ]);
-        // $file = new UploadedFile($request->files->all());
-        $files = $request->files;
-        // var_dump(array_keys($request->files->all()));
-        return $this->json(['name' => $_FILES,
-            'response' => 'The response']);
-        // return $this->json(['name' => $request->files[0]['tmp_name']]);
+    #[Route('/api/id', name: 'id', methods: ['POST'])]
+    public function getId(Request $request, UserRepository $userRepository): JsonResponse
+    {
+        $payload = $request->getPayload()->all();
+        return $this->json([
+            'id' => $userRepository->findOneByMailField($payload['mail'])->getId(),
+        ]);
     }
-
 }

@@ -2,23 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\VehiclesController;
 use App\Repository\VehiclesRepository;
+use App\State\DenyNotOwnerActionsOnCollectionProvider;
+use App\State\DenyNotOwnerActionsOnItemProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\VehiclesController;
-use ApiPlatform\Metadata\ApiProperty;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VehiclesRepository::class)]
-#[ApiResource]
 // Defines the route that adds a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles',
@@ -26,54 +27,64 @@ use ApiPlatform\Metadata\ApiProperty;
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
     operations: [new Post()],
-    controller: VehiclesController::class
+    controller: VehiclesController::class,
+    security: "is_granted('ROLE_ADMIN')",
 )]
 
+// Defines the route that gets all users' vehicles
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles',
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
     ],
     operations: [new GetCollection()],
+    provider: DenyNotOwnerActionsOnCollectionProvider::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
-// Defines the route that gets an operation
+// Defines the route that gets a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}',
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
-    operations: [new Get()]
+    operations: [new Get()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
-// Defines the route that sets an operation
+// Defines the route that sets a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}',
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
-    operations: [new Patch()]
+    operations: [new Patch()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
-// Defines the route that deletes an operation
+// Defines the route that deletes a vehicle
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}',
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class),
     ],
-    operations: [new Delete()]
+    operations: [new Delete()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defining serializer options
 #[ApiResource(
     normalizationContext: [
-        'groups' => ['read'],
+        'groups' => ['read', 'read:item'],
     ],
     denormalizationContext: [
-        'groups' => ['write'],
+        'groups' => ['write:item'],
     ],
 )]
 
@@ -83,53 +94,61 @@ class Vehicles
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['read', 'write'])]
-    // #[ApiProperty(identifier: true)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
+    #[Assert\Type('string')]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $type = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $model = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $brand = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $addedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
+    #[Groups(['read', 'write'])]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $purchasedAt = null;
 
     /**
      * @var Collection<int, Offers>
      */
-    #[ORM\OneToMany(targetEntity: Offers::class, mappedBy: 'vehicle')]
+    #[ORM\OneToMany(targetEntity: Offers::class, mappedBy: 'vehicle', orphanRemoval: true)]
     #[Groups(['read', 'write'])]
     private Collection $offers;
 
-    // /**
-    //  * @var Collection<int, Pictures>
-    //  */
-    // #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'vehicle')]
-    // #[Groups(['read', 'write'])]
-    // private Collection $pictures;
+    /**
+     * @var Collection<int, Pictures>
+     */
+    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'vehicle', orphanRemoval: true)]
+    #[Groups(['read', 'write'])]
+    private Collection $pictures;
 
     #[ORM\ManyToOne(inversedBy: 'vehicles')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['read:item', 'write:item'])]
     private ?User $user = null;
 
     public function __construct()
     {
         $this->offers = new ArrayCollection();
-        // $this->pictures = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
         $this->addedAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -178,9 +197,21 @@ class Vehicles
         return $this->addedAt;
     }
 
-    public function setAddedAt(\DateTimeImmutable $addedAt): static
+    public function setAddedAt(): static
     {
         $this->addedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(): static
+    {
+        $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -207,7 +238,7 @@ class Vehicles
 
     public function addOffer(Offers $offer): static
     {
-        if (!$this->offers->contains($offer)) {
+        if (! $this->offers->contains($offer)) {
             $this->offers->add($offer);
             $offer->setVehicle($this);
         }
@@ -227,35 +258,35 @@ class Vehicles
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Pictures>
-    //  */
-    // public function getPictures(): Collection
-    // {
-    //     return $this->pictures;
-    // }
+    /**
+     * @return Collection<int, Pictures>
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
 
-    // public function addPicture(Pictures $picture): static
-    // {
-    //     if (!$this->pictures->contains($picture)) {
-    //         $this->pictures->add($picture);
-    //         $picture->setVehicle($this);
-    //     }
+    public function addPicture(Pictures $picture): static
+    {
+        if (! $this->pictures->contains($picture)) {
+            $this->pictures->add($picture);
+            $picture->setVehicle($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function removePicture(Pictures $picture): static
-    // {
-    //     if ($this->pictures->removeElement($picture)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($picture->getVehicle() === $this) {
-    //             $picture->setVehicle(null);
-    //         }
-    //     }
+    public function removePicture(Pictures $picture): static
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getVehicle() === $this) {
+                $picture->setVehicle(null);
+            }
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getUser(): ?User
     {

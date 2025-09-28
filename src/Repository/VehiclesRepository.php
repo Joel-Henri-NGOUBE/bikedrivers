@@ -41,7 +41,7 @@ class VehiclesRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findOneByIdField($id, $user_id): ?Vehicles
+    public function findOneByIdField(int | string $id, int | string $user_id): ?Vehicles
     {
         return $this->createQueryBuilder('v')
             ->andWhere('v.id = :id')

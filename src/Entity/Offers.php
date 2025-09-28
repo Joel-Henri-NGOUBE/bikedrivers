@@ -2,53 +2,65 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Offers as OffersControllers;
+use App\Controller\OffersController;
+use App\Entity\Enums\Service;
+use App\Entity\Enums\Status;
 use App\Repository\OffersRepository;
+use App\State\DenyNotOwnerActionsOnCollectionProvider;
+use App\State\DenyNotOwnerActionsOnItemProvider;
+use App\State\DenyNotOwnerActionsProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\OffersController;
-use App\Controller\GetAnOfferController;
-use App\Entity\Enums\Status;
-use ApiPlatform\Metadata\ApiProperty;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OffersRepository::class)]
-// Defines the route that adds an operation
+// Defines the route that adds an offer
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers',
-    operations: [new Post()],
-    controller: OffersController::class
+    operations: [new Post(read: false)],
+    security: "is_granted('ROLE_ADMIN')",
+    // processor: DenyNotOwnerActionsProcessor::class
+    // controller: OffersController::class
 )]
 
-// Defines the route that gets an operation
+// Defines the route that gets all users' offers
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers',
     uriVariables: [
         'user_id' => new Link(fromClass: User::class, toProperty: 'user'),
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
     ],
-    operations: [new GetCollection()]
+    operations: [new GetCollection()],
+    provider: DenyNotOwnerActionsOnCollectionProvider::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
-// #[ApiResource(
-//     uriTemplate: '/vehicles/{vehicle_id}/offers/{offer_id}',
-//     uriVariables: [
-//         // 'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-//         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-//         'offer_id' => new Link(fromClass: Offers::class),
-//     ],
-//     operations: [new Get()],
-//     // controller: GetAnOfferController::class
-// )]
+// Defines the routes that allow the user to acces his offers elements
+#[ApiResource(
+    uriTemplate: 'users/{user_id}/offers/elements',
+    operations: [new GetCollection()],
+    controller: OffersControllers\SelfOffersElementsController::class
+)]
 
+// Defines the routes that allow the user to acces the offers he applied to
+#[ApiResource(
+    uriTemplate: 'users/{user_id}/offers/applied',
+    operations: [new GetCollection()],
+    controller: OffersControllers\AppliedOffersController::class
+)]
+
+// Defines the routes that allow the user to modify an offer
 #[ApiResource(
     uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers/{offer_id}',
     uriVariables: [
@@ -56,17 +68,9 @@ use ApiPlatform\Metadata\ApiProperty;
         'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
         'offer_id' => new Link(fromClass: Offers::class),
     ],
-    operations: [new Patch()]
-)]
-
-#[ApiResource(
-    uriTemplate: '/users/{user_id}/vehicles/{vehicle_id}/offers/{offer_id}',
-    uriVariables: [
-        'user_id' => new Link(fromClass: User::class, toClass: Vehicles::class, fromProperty: 'vehicles'),
-        'vehicle_id' => new Link(fromClass: Vehicles::class, toProperty: 'vehicle'),
-        'offer_id' => new Link(fromClass: Offers::class),
-    ],
-    operations: [new Delete()]
+    operations: [new Patch()],
+    provider: DenyNotOwnerActionsOnItemProvider::class,
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 #[ApiResource(
@@ -77,26 +81,37 @@ use ApiPlatform\Metadata\ApiProperty;
     security: "is_granted('PUBLIC_ACCESS')",
 )]
 
+// #[ApiResource(
+//     operations: [
+//         new GetCollection(write: false),
+//     ],
+//     uriTemplate: '/offers/{id}',
+//     security: "is_granted('PUBLIC_ACCESS')",
+// )]
+
 #[ApiResource(
     operations: [new Get(
-    uriTemplate: '/offers/{id}',
-    security: "is_granted('PUBLIC_ACCESS')",
-    write: false
-)])]
+        uriTemplate: '/offers/{id}',
+        security: "is_granted('PUBLIC_ACCESS')",
+        write: false
+    )]
+)]
 
 #[ApiResource(
     operations: [
         new Post(write: false, read: false),
     ],
-    uriTemplate: '/offers'
+    uriTemplate: '/offers',
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 #[ApiResource(
     operations: [
         new Patch(write: false, read: false),
-        new Delete(write: false, read: false),
+        new Delete(),
     ],
-    uriTemplate: '/offers/{id}'
+    uriTemplate: '/offers/{id}',
+    security: "is_granted('ROLE_ADMIN')"
 )]
 
 // Defining serializer options
@@ -115,44 +130,39 @@ class Offers
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['read', 'write'])]
-    // #[ApiProperty(identifier: true)]
-    // #[ApiProperty(identifier: true)]
     private ?int $id = null;
-    
+
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('integer')]
     private ?string $id_taker = null;
 
-    // #[ORM\Column(length: 255)]
-    // private ?string $title = null;
-    
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\Type('string')]
     private ?string $description = null;
-    
-    #[ORM\Column(enumType: Status::class)]
+
+    #[ORM\Column(enumType: Status::class, nullable: true, options: [
+        'default' => Status::Available,
+    ])]
     #[Groups(['read', 'write'])]
     private ?Status $status = null;
-    
-    #[ORM\Column(nullable: true)]
-    #[Groups(['read', 'write'])]
-    private ?\DateTimeImmutable $boughtAt = null;
-    
-    #[ORM\Column]
+
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $createdAt = null;
-    
-    #[ORM\Column]
+
+    #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
     private ?\DateTimeImmutable $updatedAt = null;
-    
+
     #[ORM\Column(nullable: true)]
     #[Groups(['read', 'write'])]
-    private ?\DateTimeImmutable $rentedFromAt = null;
-    
+    private ?\DateTimeImmutable $startsAt = null;
+
     #[ORM\Column(nullable: true)]
     #[Groups(['read', 'write'])]
-    private ?\DateTimeImmutable $rentedToAt = null;
+    private ?\DateTimeImmutable $endsAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'offers')]
     #[ORM\JoinColumn(nullable: false)]
@@ -160,33 +170,39 @@ class Offers
     private ?Vehicles $vehicle = null;
 
     /**
-     * @var Collection<int, Comments>
-    */
-    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'offer')]
+     * @var Collection<int, Applications>
+     */
+    #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'offer', orphanRemoval: true)]
     #[Groups(['read', 'write'])]
-    private Collection $comments;
+    private Collection $applications;
 
-    // /**
-    //  * @var Collection<int, Applications>
-    // */
-    // #[ORM\OneToMany(targetEntity: Applications::class, mappedBy: 'offer')]
-    // #[Groups(['read', 'write'])]
-    // private Collection $applications;
+    /**
+     * @var Collection<int, RequiredDocuments>
+     */
+    #[ORM\OneToMany(targetEntity: RequiredDocuments::class, mappedBy: 'offer', orphanRemoval: true)]
+    private Collection $requiredDocuments;
 
-    // /**
-    //  * @var Collection<int, Messages>
-    // */
-    // #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'offer')]
-    // #[Groups(['read', 'write'])]
-    // private Collection $messages;
+    #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\Type('string')]
+    private ?string $title = null;
+
+    #[ORM\Column(nullable: false)]
+    #[Assert\Type('float')]
+    private ?float $price = null;
+
+    #[ORM\Column(enumType: Service::class, nullable: false, options: [
+        'default' => Service::Location,
+    ])]
+    private ?Service $service = null;
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
-        // $this->applications = new ArrayCollection();
-        // $this->messages = new ArrayCollection();
+        $this->applications = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->status = Status::Available;
+        $this->service = Service::Location;
+        $this->requiredDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -205,18 +221,6 @@ class Offers
 
         return $this;
     }
-
-    // public function getTitle(): ?string
-    // {
-    //     return $this->title;
-    // }
-
-    // public function setTitle(string $title): static
-    // {
-    //     $this->title = $title;
-
-    //     return $this;
-    // }
 
     public function getDescription(): ?string
     {
@@ -238,18 +242,6 @@ class Offers
     public function setStatus(Status $status): static
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getBoughtAt(): ?\DateTimeImmutable
-    {
-        return $this->boughtAt;
-    }
-
-    public function setBoughtAt(): static
-    {
-        $this->boughtAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -278,26 +270,26 @@ class Offers
         return $this;
     }
 
-    public function getRentedFromAt(): ?\DateTimeImmutable
+    public function getStartsAt(): ?\DateTimeImmutable
     {
-        return $this->rentedFromAt;
+        return $this->startsAt;
     }
 
-    public function setRentedFromAt(): static
+    public function setStartsAt(\DateTimeImmutable $startsAt): static
     {
-        $this->rentedFromAt = new \DateTimeImmutable();
+        $this->startsAt = $startsAt;
 
         return $this;
     }
 
-    public function getRentedToAt(): ?\DateTimeImmutable
+    public function getEndsAt(): ?\DateTimeImmutable
     {
-        return $this->rentedToAt;
+        return $this->endsAt;
     }
 
-    public function setRentedToAt(): static
+    public function setEndsAt(\DateTimeImmutable $endsAt): static
     {
-        $this->rentedToAt = new \DateTimeImmutable();
+        $this->endsAt = $endsAt;
 
         return $this;
     }
@@ -315,93 +307,98 @@ class Offers
     }
 
     /**
-     * @return Collection<int, Comments>
+     * @return Collection<int, Applications>
      */
-    public function getComments(): Collection
+    public function getApplications(): Collection
     {
-        return $this->comments;
+        return $this->applications;
     }
 
-    public function addComment(Comments $comment): static
+    public function addApplication(Applications $application): static
     {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setOffer($this);
+        if (! $this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setOffer($this);
         }
 
         return $this;
     }
 
-    public function removeComment(Comments $comment): static
+    public function removeApplication(Applications $application): static
     {
-        if ($this->comments->removeElement($comment)) {
+        if ($this->applications->removeElement($application)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getOffer() === $this) {
-                $comment->setOffer(null);
+            if ($application->getOffer() === $this) {
+                $application->setOffer(null);
             }
         }
 
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Applications>
-    //  */
-    // public function getApplications(): Collection
-    // {
-    //     return $this->applications;
-    // }
+    /**
+     * @return Collection<int, RequiredDocuments>
+     */
+    public function getRequiredDocuments(): Collection
+    {
+        return $this->requiredDocuments;
+    }
 
-    // public function addApplication(Applications $application): static
-    // {
-    //     if (!$this->applications->contains($application)) {
-    //         $this->applications->add($application);
-    //         $application->setOffer($this);
-    //     }
+    public function addRequiredDocument(RequiredDocuments $requiredDocument): static
+    {
+        if (! $this->requiredDocuments->contains($requiredDocument)) {
+            $this->requiredDocuments->add($requiredDocument);
+            $requiredDocument->setOffer($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function removeApplication(Applications $application): static
-    // {
-    //     if ($this->applications->removeElement($application)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($application->getOffer() === $this) {
-    //             $application->setOffer(null);
-    //         }
-    //     }
+    public function removeRequiredDocument(RequiredDocuments $requiredDocument): static
+    {
+        if ($this->requiredDocuments->removeElement($requiredDocument)) {
+            // set the owning side to null (unless already changed)
+            if ($requiredDocument->getOffer() === $this) {
+                $requiredDocument->setOffer(null);
+            }
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // /**
-    //  * @return Collection<int, Messages>
-    //  */
-    // public function getMessages(): Collection
-    // {
-    //     return $this->messages;
-    // }
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
 
-    // public function addMessage(Messages $message): static
-    // {
-    //     if (!$this->messages->contains($message)) {
-    //         $this->messages->add($message);
-    //         $message->setOffer($this);
-    //     }
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function removeMessage(Messages $message): static
-    // {
-    //     if ($this->messages->removeElement($message)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($message->getOffer() === $this) {
-    //             $message->setOffer(null);
-    //         }
-    //     }
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
 
-    //     return $this;
-    // }
-    
+    public function setPrice(int $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(Service $service): static
+    {
+        $this->service = $service;
+
+        return $this;
+    }
 }

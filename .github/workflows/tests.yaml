@@ -1,0 +1,82 @@
+name: BikeDrivers Backend Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    # Defining the database service in order to execute SQL queries
+    services:
+      mysql:
+        image: mysql:8.0.43
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_DATABASE: bikedrivers_api
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
+          coverage: none
+
+      - name: Set Up Cache
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      # Defining the cache dir access options
+      - name: Caching Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php8.3-composer-{{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php8.3-composer-latest-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Copy .env
+        run: cp .env .env.test
+
+      # Defining the database URL in the .env file
+      - name: Update DATABASE_URL env var
+        run: sed -i 's/DATABASE_URL=.*/DATABASE_URL="mysql:\/\/root:@127.0.0.1:3306\/bikedrivers_api?serverVersion=8.0.43"/' .env.test
+
+      # Generate tokens keypair
+      - name: Generate keypair
+        run: php bin/console lexik:jwt:generate-keypair
+
+      - name: Create database
+        run: php bin/console doctrine:database:create --env=test
+
+      - name: Create migrations
+        run: php bin/console make:migration
+
+      - name: Run migrations
+        run: php bin/console doctrine:migrations:migrate --env=test -n
+
+      # Executing tests
+      - name: Run PHPUnit tests
+        run: ./vendor/bin/phpunit tests >> /tmp/tests-results.txt
+        env:
+          KERNEL_CLASS: App\Kernel
+          APP_ENV: test
+
+      - name: Upload quality report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Test Report
+          path: /tmp/tests-results.txt
