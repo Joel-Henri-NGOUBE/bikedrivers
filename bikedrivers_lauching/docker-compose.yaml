@@ -7,7 +7,6 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: true
       MYSQL_DATABASE: bikedrivers_api
-
       MYSQL_PORT: 3306
     # Déclaration des ports du container
     ports:
@@ -22,6 +21,7 @@ services:
     # Déclaration des ports du container
     environment:
       CORS_ALLOW_ORIGIN: '^http?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+      DATABASE_URL: 'mysql://root:@mysql:3306/symfony_api?serverVersion=8.0.32&charset=utf8mb4'
     ports:
       - 8000:8000
     restart: always
