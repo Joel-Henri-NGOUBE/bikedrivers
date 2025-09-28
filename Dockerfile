@@ -15,6 +15,8 @@ RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS http
 
 RUN chmod +x commands.sh
 
+RUN chmod +x commands-deploy.sh
+
 RUN composer install
 
 CMD ["./commands-deploy.sh"]
