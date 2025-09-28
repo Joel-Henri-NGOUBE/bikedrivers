@@ -1,10 +1,13 @@
 name: BikeDrivers Backend Tests
 
 on:
+  workflow_call:
   push:
-    branches: [ "main" ]
+    branches-ignore:
+      - [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches-ignore:
+      - [ "main" ]
 
 jobs:
   tests:

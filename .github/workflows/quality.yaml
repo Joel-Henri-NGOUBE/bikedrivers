@@ -1,10 +1,13 @@
 name: BikeDrivers Backend Quality assurance
 
 on:
+  workflow_call:
   push:
-    branches: [ "main" ]
+    branches-ignore:
+      - [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches-ignore:
+      - [ "main" ]
 
 jobs:
   quality:
