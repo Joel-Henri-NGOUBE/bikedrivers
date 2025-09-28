@@ -6,7 +6,7 @@ COPY composer.json /bikedrivers
 
 COPY . /bikedrivers
 
-ENV DATABASE_URL=mysql://root:@mysql:3306/symfony_api?serverVersion=8.0.32&charset=utf8mb4
+ENV DATABASE_URL=mysql://root:@mysql:3306/bikedrivers_api?serverVersion=8.0.32&charset=utf8mb4
 
 RUN docker-php-ext-install pdo pdo_mysql
 
