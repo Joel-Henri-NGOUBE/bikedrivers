@@ -2,6 +2,7 @@
 
 namespace App\Controller\Documents;
 
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Documents;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +15,7 @@ use Exception;
 
 final class PostDocumentsController extends AbstractController
 {
-    public function __construct(private JWTTokenManagerInterface $jwtManager, private TokenStorageInterface $tokenStorageInterface){
+    public function __construct(private JWTTokenManagerInterface $jwtManager, private TokenStorageInterface $tokenStorageInterface, private ValidatorInterface $validator){
     }
     public function __invoke(int | string $user_id, Request $request, userRepository $userRepository, EntityManagerInterface $em): JsonResponse
     {
@@ -29,10 +30,17 @@ final class PostDocumentsController extends AbstractController
                 throw new Exception("You are not allowed to act on someone else's data");
             }
 
+            
             // Retrieve the Document transfered in the form
             $file = $request->files->get('file');
             $newDocument = new Documents();
             $newDocument->setDocumentFile($file);
+            
+            $errors = $this->validator->validate($newDocument);
+            
+            if(count($errors) > 0){
+                return $this->json(["error" => "Your file exceeds the maximum size accepted. Please consider uploading another image"])->setStatusCode(500);
+            }
 
             // Get the vehicule to which the Document is related
             $user = $userRepository->findOneByIdField($user_id);

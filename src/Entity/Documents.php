@@ -83,8 +83,6 @@ class Documents
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
-    #[Assert\Type('string')]
     private ?string $path = null;
 
     #[Vich\UploadableField(mapping: 'documents', fileNameProperty: 'path')]

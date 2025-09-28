@@ -9,15 +9,17 @@ use App\Repository\VehiclesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Exception;
 final class PicturesController extends AbstractController
 {
-    public function __construct(private JWTTokenManagerInterface $jwtManager, private TokenStorageInterface $tokenStorageInterface){
+    public function __construct(private JWTTokenManagerInterface $jwtManager, private TokenStorageInterface $tokenStorageInterface, private ValidatorInterface $validator){
     }
-    public function __invoke(int | string $user_id, int | string $vehicle_id, Request $request, VehiclesRepository $vehiclesRepository, EntityManagerInterface $em, UserRepository $userRepository): JsonResponse
+    public function __invoke(int | string $user_id, int | string $vehicle_id, Request $request, VehiclesRepository $vehiclesRepository, EntityManagerInterface $em, UserRepository $userRepository): JsonResponse|Response
     {
         try {
             // Get the user token and decode it
@@ -37,6 +39,12 @@ final class PicturesController extends AbstractController
             $newPicture = new Pictures();
             $newPicture->setPictureFile($file);
 
+            $errors = $this->validator->validate($newPicture);
+            
+            if(count($errors) > 0){
+                return $this->json(["error" => "Your file is neither an image nor has a smaller size than the maximum accepted. Try uploading another image"])->setStatusCode(500);
+            }
+
             // Get the vehicule to which the picture is related
             $vehicle = $vehiclesRepository->findOneByIdField($vehicle_id, $user_id);
             $vehicle->addPicture($newPicture);
@@ -54,7 +62,10 @@ final class PicturesController extends AbstractController
         } catch (\Throwable $th) {
             return $this->json([
                 "error" => $th
-            ]);
+            ])->setStatusCode(500);
         }
+    }
+    public function validate(ValidatorInterface $validator){
+
     }
 }
