@@ -13,12 +13,10 @@ use App\Controller\Applications\AppliersController;
 use App\Controller\Applications\HasAppliedController;
 use App\Entity\Enums\ApplicationState;
 use App\Repository\ApplicationsRepository;
-use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ApplicationsRepository::class)]
 
@@ -29,9 +27,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
     ],
     operations: [new Post(read: false)],
-    )]
-    
-    
+)]
+
 // Defines the route that gets all the appliers of an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/appliers',
@@ -45,8 +42,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     uriTemplate: '/offers/{offer_id}/applications/users/{user_id}/hasApplied',
     operations: [new Get()],
     controller: HasAppliedController::class
-    )]
-    
+)]
+
 // Defines the route that retrieves the applications of an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications',
@@ -57,7 +54,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [new GetCollection()]
 )]
 
-    // Defines the route that sets an operation
+// Defines the route that sets an operation
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/{application_id}',
     uriVariables: [

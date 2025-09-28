@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +15,9 @@ class SignUpController extends AbstractController
     #[Route('signup', name: 'signup', methods: ['POST'])]
     public function signup(
         Request $request,
-        UserRepository $userRepository, 
-        UserPasswordHasherInterface $passwordHasher): JsonResponse
-    {
+        UserRepository $userRepository,
+        UserPasswordHasherInterface $passwordHasher
+    ): JsonResponse {
         $payload = $request->getPayload()->all();
 
         // Determines if the user exists

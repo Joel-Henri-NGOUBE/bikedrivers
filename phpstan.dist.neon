@@ -16,5 +16,4 @@ parameters:
         - identifier: argument.type
         - identifier: if.alwaysTrue
         - identifier: missingType.return
-        
-        # - identifier: missingType.parameter
+        - identifier: missingType.generics

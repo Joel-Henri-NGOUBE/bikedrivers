@@ -62,7 +62,7 @@ final class PostAndGetVehiclesOperationTest extends ApiTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
-        
+
         // Adding a new vehicle to him
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [

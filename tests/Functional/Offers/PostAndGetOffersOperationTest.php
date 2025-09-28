@@ -54,7 +54,7 @@ final class PostAndGetOffersOperationTest extends ApiTestCase
 
         $id = $response2->toArray()['id'];
 
-        // Getting the users' vehicles 
+        // Getting the users' vehicles
         $response3 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],

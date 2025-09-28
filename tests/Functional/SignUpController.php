@@ -24,7 +24,7 @@ final class SignUpControllerTest extends ApiTestCase
                 'password' => 'password',
             ],
         ]);
-        
+
         // Log him in
         self::assertResponseIsSuccessful();
 

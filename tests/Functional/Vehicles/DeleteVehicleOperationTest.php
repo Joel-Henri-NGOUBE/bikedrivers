@@ -77,7 +77,6 @@ final class DeleteVehicleOperationTest extends ApiTestCase
             ],
         ]);
 
-        
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],

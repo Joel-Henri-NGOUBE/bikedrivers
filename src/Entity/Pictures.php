@@ -11,12 +11,11 @@ use App\Controller\PicturesController;
 use App\Repository\PicturesRepository;
 use App\State\DenyNotOwnerActionsOnCollectionProvider;
 use App\State\DenyNotOwnerActionsOnItemProvider;
-use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: PicturesRepository::class)]
 #[Vich\Uploadable]

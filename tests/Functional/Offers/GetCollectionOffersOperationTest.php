@@ -115,7 +115,6 @@ final class GetCollectionOffersOperationTest extends ApiTestCase
             ],
         ]);
 
-
         $client->request('POST', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],

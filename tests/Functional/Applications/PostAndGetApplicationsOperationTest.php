@@ -157,12 +157,12 @@ final class PostAndGetApplicationsOperationTest extends ApiTestCase
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
         ]);
-        
+
         $json3 = $response6->toArray()['member'];
-        
+
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($json3));
-        
+
         // Adding a required document for that offer
         $client->request('POST', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [

@@ -64,7 +64,6 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(0, count($response3->toArray()['member']));
 
-
         // Adding a new vehicle to his collection
         $client->request('POST', "/api/users/{$id}/vehicles", [
             'headers' => [
@@ -127,7 +126,7 @@ final class PatchRequiredDocumentOperationTest extends ApiTestCase
                 'offer' => "api/offers/{$offer_id}",
             ],
         ]);
-        
+
         // Getting the required documents
         $response7 = $client->request('GET', "/api/offers/{$offer_id}/required_documents", [
             'headers' => [

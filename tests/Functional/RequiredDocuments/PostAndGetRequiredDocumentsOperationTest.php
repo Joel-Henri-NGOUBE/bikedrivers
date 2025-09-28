@@ -77,7 +77,6 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
             ],
         ]);
 
-
         $response4 = $client->request('GET', "/api/users/{$id}/vehicles", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
@@ -144,9 +143,9 @@ final class PostAndGetRequiredDocumentsOperationTest extends ApiTestCase
                 'Authorization' => 'Bearer ' . $json['token'],
             ],
         ]);
-        
+
         $json4 = $response7->toArray()['member'];
-        
+
         // Asserting it has been created
         $this->assertResponseIsSuccessful();
         $this->assertEquals(1, count($json4));

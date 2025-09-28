@@ -11,14 +11,13 @@ use App\Controller\Documents as DocumentsControllers;
 use App\Repository\DocumentsRepository;
 use App\State\DenyNotOwnerActionsOnCollectionProvider;
 use App\State\DenyNotOwnerActionsOnItemProvider;
-use App\State\DenyNotOwnerActionsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: DocumentsRepository::class)]
 
@@ -38,7 +37,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     operations: [new GetCollection()],
     provider: DenyNotOwnerActionsOnCollectionProvider::class,
-
 )]
 // Defines the routes that get some documents elements
 #[ApiResource(

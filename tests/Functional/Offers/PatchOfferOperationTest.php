@@ -123,7 +123,6 @@ final class PatchOfferOperationTest extends ApiTestCase
             ],
         ]);
 
-
         $response6 = $client->request('GET', "/api/users/{$id}/vehicles/{$vehicle_id}/offers", [
             'headers' => [
                 'Authorization' => 'Bearer ' . $json['token'],
