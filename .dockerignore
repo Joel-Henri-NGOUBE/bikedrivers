@@ -4,9 +4,11 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/public/media/
 /var/
 /vendor/
 /migrations/*
+/migrations/*.php
 /.git
 ###< symfony/framework-bundle ###
 
