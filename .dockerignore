@@ -9,7 +9,10 @@
 /vendor/
 /migrations/*
 /migrations/*.php
+/.github
+.editorconfig
 /.git
+/bikedrivers_launching/backup
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
