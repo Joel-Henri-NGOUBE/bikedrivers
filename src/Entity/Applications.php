@@ -31,16 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [new Post(read: false)],
     )]
     
-    // Defines the route that retrieves the applications of an offer
-#[ApiResource(
-    uriTemplate: '/offers/{offer_id}/applications',
-    uriVariables: [
-        'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
-    ],
-    security: "is_granted('ROLE_ADMIN')",
-    operations: [new GetCollection()]
-)]
-
+    
 // Defines the route that gets all the appliers of an offer
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/appliers',
@@ -54,9 +45,19 @@ use Symfony\Component\Validator\Constraints as Assert;
     uriTemplate: '/offers/{offer_id}/applications/users/{user_id}/hasApplied',
     operations: [new Get()],
     controller: HasAppliedController::class
+    )]
+    
+// Defines the route that retrieves the applications of an offer
+#[ApiResource(
+    uriTemplate: '/offers/{offer_id}/applications',
+    uriVariables: [
+        'offer_id' => new Link(fromClass: Offers::class, toProperty: 'offer'),
+    ],
+    security: "is_granted('ROLE_ADMIN')",
+    operations: [new GetCollection()]
 )]
 
-// Defines the route that sets an operation
+    // Defines the route that sets an operation
 #[ApiResource(
     uriTemplate: '/offers/{offer_id}/applications/{application_id}',
     uriVariables: [

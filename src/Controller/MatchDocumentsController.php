@@ -12,9 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class MatchDocumentsController extends AbstractController
 {
-    public function __invoke(int | string $required_document_id, int | string $document_id, Request $request, RequiredDocumentsRepository $requiredDocumentRepository, DocumentsRepository $documentsRepository, EntityManagerInterface $em): JsonResponse
+    public function __invoke(int | string $required_document_id, int | string $document_id, RequiredDocumentsRepository $requiredDocumentRepository, DocumentsRepository $documentsRepository, EntityManagerInterface $em): JsonResponse
     {
-        $payload = $request->getPayload()->all();
         $newMatchDocument = new MatchDocuments();
         $requiredDocumentRepository->findOneByIdField($required_document_id)->addMatchDocument($newMatchDocument);
         // Linking the document with the requiredDocument

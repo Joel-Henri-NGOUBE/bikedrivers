@@ -15,8 +15,7 @@ class SignUpController extends AbstractController
 {
     #[Route('signup', name: 'signup', methods: ['POST'])]
     public function signup(
-        Request $request, 
-        EntityManagerInterface $em, 
+        Request $request,
         UserRepository $userRepository, 
         UserPasswordHasherInterface $passwordHasher): JsonResponse
     {

@@ -3,26 +3,48 @@
 namespace App\Controller\Applications;
 
 use App\Repository\ApplicationsRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Exception;
 
 final class HasAppliedController extends AbstractController
 {
-    public function __invoke(int | string $offer_id, int | string $user_id, Request $request, ApplicationsRepository $applicationsRepository, EntityManagerInterface $em): JsonResponse
+    public function __construct(private JWTTokenManagerInterface $jwtManager, private TokenStorageInterface $tokenStorageInterface){
+    }
+    public function __invoke(int | string $offer_id, int | string $user_id, ApplicationsRepository $applicationsRepository, UserRepository $userRepository): JsonResponse
     {
-        $user = $applicationsRepository->findIfUserHasApplied($offer_id, $user_id);
+        try {
+            // Get the user token and decode it
+            $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
 
-        if (count($user)) {
+            // Get the user id of the one authenticated
+            $authenticatedUserId = $userRepository->findOneByMailField($decodedJwtToken["username"])->getId();
+                
+            // Denying the action if the applier isn't the one requesting or an Administrator
+            if(!($user_id == $authenticatedUserId || in_array("ROLE_ADMIN", $decodedJwtToken["roles"]))){
+                throw new Exception("You are not allowed to act on someone else's data");
+            }
+
+            $user = $applicationsRepository->findIfUserHasApplied($offer_id, $user_id);
+
+            if (count($user)) {
+                return $this->json([
+                    'hasApplied' => true,
+                ]);
+            }
+
             return $this->json([
-                'hasApplied' => true,
+                'hasApplied' => false,
             ]);
+        } catch (\Throwable $th) {
+            return $this->json([
+                "error" => $th
+            ])->setStatusCode(500);
         }
-
-        return $this->json([
-            'hasApplied' => false,
-        ]);
-
     }
 }

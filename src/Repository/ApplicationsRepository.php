@@ -100,4 +100,14 @@ class ApplicationsRepository extends ServiceEntityRepository
 
         return $result->fetchAllAssociative();
     }
+
+       public function findOneById($application_id): ?Applications
+       {
+           return $this->createQueryBuilder('a')
+               ->andWhere('a.id = :application_id')
+               ->setParameter('application_id', $application_id)
+               ->getQuery()
+               ->getOneOrNullResult()
+           ;
+       }
 }
