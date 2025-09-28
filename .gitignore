@@ -17,7 +17,6 @@ index.html
 
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
-lexik_jwt_authentication.yaml
 ###< lexik/jwt-authentication-bundle ###
 
 ###> phpstan/phpstan ###
