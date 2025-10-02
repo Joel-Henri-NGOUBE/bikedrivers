@@ -139,12 +139,14 @@ class Offers
 
     #[ORM\Column(type: Types::TEXT, nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\NotBlank]
     #[Assert\Type('string')]
     private ?string $description = null;
 
     #[ORM\Column(enumType: Status::class, nullable: true, options: [
         'default' => Status::Available,
     ])]
+    #[Assert\NotBlank]
     #[Groups(['read', 'write'])]
     private ?Status $status = null;
 
@@ -183,16 +185,20 @@ class Offers
     private Collection $requiredDocuments;
 
     #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank]
     #[Assert\Type('string')]
     private ?string $title = null;
 
     #[ORM\Column(nullable: false)]
     #[Assert\Type('float')]
+    #[Assert\Positive]
+    #[Assert\NotBlank]
     private ?float $price = null;
 
     #[ORM\Column(enumType: Service::class, nullable: false, options: [
         'default' => Service::Location,
     ])]
+    #[Assert\NotBlank]
     private ?Service $service = null;
 
     public function __construct()

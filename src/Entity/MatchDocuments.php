@@ -12,6 +12,7 @@ use App\Controller\MatchDocumentsController;
 use App\Entity\Enums\State;
 use App\Repository\MatchDocumentsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MatchDocumentsRepository::class)]
 
@@ -65,6 +66,7 @@ class MatchDocuments
     #[ORM\Column(enumType: State::class, options: [
         'default' => State::Unevaluated,
     ], nullable: false)]
+    #[Assert\NotBlank]
     private ?State $state = null;
 
     #[ORM\ManyToOne(inversedBy: 'matchDocuments')]

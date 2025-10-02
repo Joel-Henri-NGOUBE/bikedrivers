@@ -16,6 +16,7 @@ use App\Repository\ApplicationsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ApplicationsRepository::class)]
@@ -114,7 +115,9 @@ class Applications
     #[ORM\Column(enumType: ApplicationState::class, nullable: false, options: [
         'default' => ApplicationState::Evaluating,
     ])]
-    private ?ApplicationState $state = null;
+    #[Assert\NotBlank]
+    private ?ApplicationState $state = null;    
+
 
     public function __construct()
     {

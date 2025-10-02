@@ -111,6 +111,7 @@ class RequiredDocuments
     #[ORM\Column(length: 255, nullable: false)]
     #[Groups(['read', 'write'])]
     #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     /**

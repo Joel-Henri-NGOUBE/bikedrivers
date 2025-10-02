@@ -50,16 +50,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: false)]
     #[Groups(['read'])]
     #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $password = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $lastname = null;
 
     #[ORM\Column(nullable: false)]

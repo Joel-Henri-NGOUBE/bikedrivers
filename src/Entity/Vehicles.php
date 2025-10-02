@@ -100,16 +100,19 @@ class Vehicles
     #[Assert\Type('string')]
     #[Groups(['read', 'write'])]
     #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $type = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $model = null;
 
     #[ORM\Column(length: 50, nullable: false)]
     #[Groups(['read', 'write'])]
     #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $brand = null;
 
     #[ORM\Column(nullable: false)]
@@ -122,6 +125,7 @@ class Vehicles
 
     #[ORM\Column(nullable: false)]
     #[Groups(['read', 'write'])]
+    #[Assert\NotBlank]
     private ?\DateTimeImmutable $purchasedAt = null;
 
     /**
